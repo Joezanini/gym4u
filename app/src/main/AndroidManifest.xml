@@ -9,7 +9,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".GettingStartedActivity"></activity>
+        <activity android:name=".InstructorRegister"></activity>
+        <activity android:name=".InstructorLogin" />
+        <activity
+            android:name=".ui.login.InstructorLoginActivity"
+            android:label="@string/title_activity_instructor_login"
+            android:parentActivityName=".GettingStartedActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.gym4u.GettingStartedActivity" />
+        </activity>
+        <activity
+            android:name=".ui.login.LoginActivityInstructor"
+            android:label="@string/title_activity_login_instructor" />
+        <activity android:name=".GettingStartedActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
