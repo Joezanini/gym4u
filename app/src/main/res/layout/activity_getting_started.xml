@@ -32,6 +32,7 @@
         android:layout_marginBottom="8dp"
         android:background="#ffa500"
         android:text="Student"
+        android:onClick="clientLogin"
         app:layout_constraintBottom_toTopOf="@+id/instructorButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

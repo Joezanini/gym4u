@@ -18,4 +18,9 @@ public class GettingStartedActivity extends AppCompatActivity {
         Intent intent = new Intent(this, InstructorLogin.class);
         startActivity(intent);
     }
+
+    public void clientLogin(View view) {
+        Intent intent = new Intent(this, ClientLogin.class);
+        startActivity(intent);
+    }
 }
