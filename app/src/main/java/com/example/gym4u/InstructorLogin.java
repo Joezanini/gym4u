@@ -19,10 +19,10 @@ public class InstructorLogin extends AppCompatActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_instructor_login);
 
-        iUsername = (EditText) findViewById(R.id.etUsername);
-        iPassword = (EditText) findViewById(R.id.etPassword);
-        iLogin = (Button) findViewById(R.id.instrLoginBtn);
-        iRegister = (TextView) findViewById(R.id.instrRegisterLink);
+        iUsername = findViewById(R.id.etUsername);
+        iPassword = findViewById(R.id.etPassword);
+        iLogin = findViewById(R.id.instrLoginBtn);
+        iRegister = findViewById(R.id.instrRegisterLink);
         iLogin.setOnClickListener(this);
 
     }

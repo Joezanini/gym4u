@@ -15,11 +15,11 @@ public class InstructorRegister extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_intructor_register);
-        iRegister = (Button) findViewById(R.id.instrRegisterBtn);
-        name = (EditText) findViewById(R.id.eName);
-        gym = (EditText) findViewById(R.id.etGym);
-        username = (EditText) findViewById(R.id.etUsername);
-        password = (EditText) findViewById(R.id.etPassword);
+        iRegister = findViewById(R.id.instrRegisterBtn);
+        name = findViewById(R.id.eName);
+        gym = findViewById(R.id.etGym);
+        username = findViewById(R.id.etUsername);
+        password = findViewById(R.id.etPassword);
 
         iRegister.setOnClickListener(this);
     }
