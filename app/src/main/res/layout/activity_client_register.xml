@@ -47,13 +47,13 @@
         android:text="Password"/>
 
     <EditText
-        android:id="@+id/etPassword"
+        android:id="@+id/etClientPassword"
         android:layout_width="match_parent"
         android:inputType="textPassword"
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/instrRegisterBtn"
+        android:id="@+id/clientRegisterBtn"
         android:layout_width="match_parent"
         android:text="Register"
         android:layout_height="wrap_content" />

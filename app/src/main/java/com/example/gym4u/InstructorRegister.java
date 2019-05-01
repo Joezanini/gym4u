@@ -20,7 +20,6 @@ public class InstructorRegister extends AppCompatActivity implements View.OnClic
         gym = findViewById(R.id.etGym);
         username = findViewById(R.id.etUsername);
         password = findViewById(R.id.etPassword);
-
         iRegister.setOnClickListener(this);
     }
 

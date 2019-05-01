@@ -37,6 +37,14 @@ public class ClientLocalStore {
         spEditor.commit();
     }
 
+    public boolean getClientLoggedIn() {
+        if (clientLocalDatabase.getBoolean("loggedIn", false) == true) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public void clearClientData() {
         SharedPreferences.Editor spEditor = clientLocalDatabase.edit();
         spEditor.clear();
