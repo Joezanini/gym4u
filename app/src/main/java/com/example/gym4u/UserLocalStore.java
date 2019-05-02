@@ -18,6 +18,8 @@ public class UserLocalStore {
         spEditor.putString("username", user.username);
         spEditor.putString("password", user.password);
         spEditor.putString("gym", user.gym);
+        spEditor.putBoolean("instructor", user.instructor);
+        spEditor.putBoolean("client", user.client);
         spEditor.commit();
     }
 
@@ -26,8 +28,9 @@ public class UserLocalStore {
         String username = userLocalDatabase.getString("username", "");
         String gym = userLocalDatabase.getString("gym", "");
         String password = userLocalDatabase.getString("password", "");
-
-        User storedUser = new User(name, username, gym, password, false, false);
+        boolean instructor = userLocalDatabase.getBoolean("instructor", false);
+        boolean client = userLocalDatabase.getBoolean("client", false);
+        User storedUser = new User(name, username, gym, password, instructor, client);
         return storedUser;
     }
 
@@ -45,6 +48,7 @@ public class UserLocalStore {
         }
     }
 
+    //this is for logging out
     public void clearUserData() {
         SharedPreferences.Editor spEditor = userLocalDatabase.edit();
         spEditor.clear();
