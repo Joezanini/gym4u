@@ -9,10 +9,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ClientRegister"></activity>
-        <activity android:name=".ClientLogin" />
-        <activity android:name=".InstructorRegister" />
-        <activity android:name=".InstructorLogin" />
+        <activity android:name=".UserRegister"></activity>
+        <activity android:name=".UserLogin" />
         <activity
             android:name=".ui.login.InstructorLoginActivity"
             android:label="@string/title_activity_instructor_login"
@@ -24,7 +22,6 @@
         <activity
             android:name=".ui.login.LoginActivityInstructor"
             android:label="@string/title_activity_login_instructor" />
-        <activity android:name=".GettingStartedActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
