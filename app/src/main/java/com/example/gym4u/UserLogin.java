@@ -58,7 +58,7 @@ public class UserLogin extends AppCompatActivity implements View.OnClickListener
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.userLoginBtn:
-                User user = new User(null, null, null, null);
+                User user = new User(null, null, null, null, false, false);
                 userLocalStore.storeUserData(user);
                 userLocalStore.setUserLoggedIn(true);
                 break;
