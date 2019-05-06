@@ -54,10 +54,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ClientRegister" />
-        <activity android:name=".ClientLogin" />
-        <activity android:name=".InstructorRegister" />
-        <activity android:name=".InstructorLogin" />
+        <activity android:name=".UserRegister"></activity>
+        <activity android:name=".UserLogin" />
+>>>>>>> 6875532f5dad72fd52b5816d8fb998867df49e22
         <activity
             android:name=".ui.login.InstructorLoginActivity"
             android:label="@string/title_activity_instructor_login"
@@ -69,7 +68,6 @@
         <activity
             android:name=".ui.login.LoginActivityInstructor"
             android:label="@string/title_activity_login_instructor" />
-        <activity android:name=".GettingStartedActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
