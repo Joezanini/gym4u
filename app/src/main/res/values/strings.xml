@@ -10,4 +10,17 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="title_activity_instructor_login">Sign in</string>
+    <string name="title_activity_client__home">Client_Home</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_wall">Wall</string>
+    <string name="user_avi">user-avi</string>
+    <string name="UserName">First Lasr</string>
+    <string name="title_activity_announcement">Announcement</string>
+    <string name="title_activity_urgym">Urgym</string>
+    <string name="title_activity_urheart">Urheart</string>
 </resources>
