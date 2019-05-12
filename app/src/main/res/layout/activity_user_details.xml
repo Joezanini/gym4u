@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".userDetailsActivity">
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="408dp"
+        android:layout_height="583dp"
+        android:background="#00E9E9E9"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/activity_horizontal_margin"
+        tools:ignore="MissingConstraints"
+        tools:layout_editor_absoluteY="51dp">
+
+        <TextView
+            android:id="@+id/constraintLayout"
+            android:layout_width="145dp"
+            android:layout_height="49dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="11dp"
+            android:gravity="center"
+            android:text="Select User Type"
+            android:textColor="#F5160202"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toTopOf="@+id/spinner"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/constraintLayout"
+            tools:layout_editor_absoluteX="133dp"
+            tools:layout_editor_absoluteY="30dp" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="82dp"
+            android:entries="@array/client_type"
+            android:gravity="center|center_horizontal"
+            app:layout_constraintBottom_toTopOf="@+id/selectGymTextView"
+            tools:layout_editor_absoluteX="138dp"
+            tools:layout_editor_absoluteY="90dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:id="@+id/enterNameTextView"
+            android:layout_width="167dp"
+            android:layout_height="49dp"
+            android:gravity="center"
+            android:text="Enter First Name"
+            android:textColor="#FC050000"
+            android:textSize="18sp"
+            tools:layout_editor_absoluteX="122dp"
+            tools:layout_editor_absoluteY="303dp" />
+
+        <EditText
+            android:id="@+id/nameEditText"
+            android:layout_width="366dp"
+            android:layout_height="wrap_content"
+            tools:layout_editor_absoluteY="376dp" />
+
+        <ImageView
+            android:id="@+id/gymIcon"
+            android:layout_width="177dp"
+            android:layout_height="102dp"
+            app:srcCompat="@drawable/gym"
+            tools:layout_editor_absoluteX="61dp"
+            tools:layout_editor_absoluteY="148dp" />
+
+        <TextView
+            android:id="@+id/selectGymTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Gym"
+            android:textColor="#F50F0000"
+            android:textSize="18sp"
+            tools:layout_editor_absoluteX="161dp"
+            tools:layout_editor_absoluteY="196dp" />
+
+        <Spinner
+            android:id="@+id/gymSpinner"
+            android:layout_width="211dp"
+            android:layout_height="46dp"
+            android:layout_marginBottom="22dp"
+            android:entries="@array/gyms"
+            android:gravity="center_horizontal|center_vertical"
+            app:layout_constraintBottom_toTopOf="@+id/enterNameTextView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/selectGymTextView"
+            tools:layout_editor_absoluteX="82dp"
+            tools:layout_editor_absoluteY="232dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/confirmButton"
+            android:layout_width="411dp"
+            android:layout_height="wrap_content"
+            android:text="Confirm Profile "
+            tools:layout_editor_absoluteY="474dp" />
+    </LinearLayout>
+
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "456859969440",
+    "firebase_url": "https://gym4u-e40b9.firebaseio.com",
+    "project_id": "gym4u-e40b9",
+    "storage_bucket": "gym4u-e40b9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:456859969440:android:cb83b513e3273dd7",
+        "android_client_info": {
+          "package_name": "com.example.gym4u"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "456859969440-4stj7m41igh2l9o1h3ou961tousrmpm9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.gym4u",
+            "certificate_hash": "498f15e3329b180c9554b4db1172bbf5c724823d"
+          }
+        },
+        {
+          "client_id": "456859969440-s2ue70cv2vn0plvi90t6tpbjgqpo4l1j.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC-MdxxcqFWSt6Szz5FXksAT9Yx0ZlAbRs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "456859969440-s2ue70cv2vn0plvi90t6tpbjgqpo4l1j.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
