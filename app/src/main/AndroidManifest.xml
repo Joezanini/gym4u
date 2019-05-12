@@ -10,11 +10,56 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="ExtraText,GoogleAppIndexingWarning">
         <activity android:name=".userDetailsActivity"></activity>
         <activity android:name=".UserRegister" />
         <activity android:name=".resetPassword" />
         <activity android:name=".UserLogin"></activity>
+        <activity
+            android:name=".Urheart"
+            android:label="@string/title_activity_urheart"
+            android:parentActivityName=".Client_Home"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.gym4u.Client_Home" />
+        </activity>
+        <activity
+            android:name=".Urgym"
+            android:label="@string/title_activity_urgym"
+            android:parentActivityName=".Client_Home"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.gym4u.Client_Home" />
+        </activity>
+        <activity
+            android:name=".Announcement"
+            android:label="@string/title_activity_announcement"
+            android:parentActivityName=".Client_Home"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.gym4u.Client_Home" />
+        </activity>
+        <activity
+            android:name=".Wall"
+            android:label="@string/title_activity_wall"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.example.gym4u.Client_Home" />
+        </activity>
+        <activity
+            android:name=".Client_Home"
+            android:label="@string/title_activity_client__home"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
