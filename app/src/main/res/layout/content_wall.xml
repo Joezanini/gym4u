@@ -9,6 +9,11 @@
     android:orientation="vertical"
     tools:showIn="@layout/app_bar_wall">
 
+    <ImageView
+        android:id= "@+id/postImage"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        />
     <EditText
         android:id="@+id/Post"
         android:layout_width="match_parent"
@@ -30,7 +35,11 @@
         android:onClick="UpdatePost"
         android:text="Create NewPost" />
 
-    <android.support.v7.widget.RecyclerView
+    <ListView
+        android:id="@+id/List"
+        android:background="#bebad8"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="0.55">
+    </ListView>
 </LinearLayout>

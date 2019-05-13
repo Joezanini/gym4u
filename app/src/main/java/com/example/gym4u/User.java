@@ -2,11 +2,21 @@ package com.example.gym4u;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 
+
 @IgnoreExtraProperties
 public class User {
-    String id, name, gym, password, username;
-    boolean instructor, client;
+    String id, name, gym, password, username, type;
+//    boolean instructor, client;
 
+    public User(){
+
+    }
+    public User(String name, String gym, String type){
+        this.name = name;
+        this.gym = gym;
+        this.type = type;
+    }
+/*
     public User (String username,String password, String name, String gym) {
         this.id = id;
         this.name = name;
@@ -14,6 +24,7 @@ public class User {
         this.gym = gym;
         this.password = password;
     }
+    */
 /*
     public User(String username, String password, String gym) {
         this.username = username;
@@ -42,11 +53,11 @@ public class User {
         return username;
     }
 
-    public boolean isInstructor() {
-        return instructor;
-    }
+    //public boolean isInstructor() {
+      //  return instructor;
+    //}
 
-    public boolean isClient() {
-        return client;
-    }
+    //public boolean isClient() {
+       // return client;
+    //}
 }

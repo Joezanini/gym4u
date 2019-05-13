@@ -107,7 +107,8 @@
             android:layout_width="411dp"
             android:layout_height="wrap_content"
             android:text="Confirm Profile "
-            tools:layout_editor_absoluteY="474dp" />
+            tools:layout_editor_absoluteY="474dp"
+            android:onClick="ButtonClick"/>
     </LinearLayout>
 
 
