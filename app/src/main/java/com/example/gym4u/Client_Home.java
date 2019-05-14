@@ -27,14 +27,18 @@ import com.google.firebase.database.ValueEventListener;
 
 public class Client_Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
+    //TextView name;
+    static final String STATE_USER = "user";
+    static final String STATE_GYM = "gym";
+    private String gym;
+    private String post;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client__home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+      //  name = findViewById(R.id.navHeadName);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -47,46 +51,64 @@ public class Client_Home extends AppCompatActivity
 
 
         // Get a reference to our posts
-        String id = FirebaseAuth.getInstance().getUid();
-        final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Users/"+id+"/name");
-        DatabaseReference refG = database.getReference("Users/"+id+"/gym");
-        refG.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String gym = (String) dataSnapshot.getValue();
-                LinearLayout ll = findViewById(R.id.layoutContent);
-                if(gym.matches("Dynamic MMA")) {
-                    ll.setBackgroundResource(R.drawable.dynamic);
-                }
-                else{
-                    Toast.makeText(Client_Home.this, "the gym is not dynamic", Toast.LENGTH_LONG).show();
-                }
-            }
+        if (savedInstanceState != null) {
+            String savedUser = savedInstanceState.getString(STATE_USER);
+            String savedGym = savedInstanceState.getString(STATE_GYM);
+            TextView nameView = findViewById(R.id.navHeadName);
+            Log.d("InstanceSave", savedUser);
+            nameView.setText(savedUser);
+        }
+        else {
+            String id = FirebaseAuth.getInstance().getUid();
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference ref = database.getReference("Users/" + id + "/name");
+            DatabaseReference refG = database.getReference("Users/" + id + "/gym");
+            refG.addValueEventListener(new ValueEventListener() {
+                                           @Override
+                                           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                               gym = (String) dataSnapshot.getValue();
+                                               LinearLayout ll = findViewById(R.id.layoutContent);
+                                               if (gym.matches("Dynamic MMA")) {
+                                                   Log.d("gotGym", gym);
+                                                   //ll.setBackgroundResource(R.drawable.dynamic);
+                                               } else {
+                                                   Toast.makeText(Client_Home.this, "the gym is not dynamic", Toast.LENGTH_LONG).show();
+                                               }
+                                           }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });
+                                           @Override
+                                           public void onCancelled(@NonNull DatabaseError databaseError) {
+                                               System.out.println("The read failed: " + databaseError.getCode());
+                                           }
+                                       }
+            );
 // Attach a listener to read the data at our posts reference
-        ref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String post = (String) dataSnapshot.getValue();
-                Log.d("Error:", post);
-                TextView name = findViewById(R.id.navHeadName);
-                name.setText(post);
-            }
+            ref.addValueEventListener(new ValueEventListener() {
+                                          @Override
+                                          public void onDataChange(DataSnapshot dataSnapshot) {
+                                              post = (String) dataSnapshot.getValue();
+                                              Log.d("Error:", post);
+                                              TextView name = findViewById(R.id.navHeadName);
+                                              //name.setText(post);
+                                          }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("The read failed: " + databaseError.getCode());
-            }
-        });
+                                          @Override
+                                          public void onCancelled(DatabaseError databaseError) {
+                                              System.out.println("The read failed: " + databaseError.getCode());
+                                          }
+                                      }
+            );
+        }
 
 
     }
+    @Override
+    protected void onSaveInstanceState(Bundle state) {
+        state.putString(STATE_USER, post);
+        state.putString(STATE_GYM, gym);
+        super.onSaveInstanceState(state);
+    }
+
 
     @Override
     public void onBackPressed() {
