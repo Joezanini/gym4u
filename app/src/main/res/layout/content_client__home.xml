@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/clienthome"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".Client_Home"
@@ -14,29 +15,31 @@
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
-        android:layout_margin="20dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_margin="20dp"
         android:contentDescription="@string/user_avi"
-        app:srcCompat="@mipmap/ic_launcher_round"
-        />
+        android:visibility="invisible"
+        app:srcCompat="@mipmap/ic_launcher_round" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Daily Move"
         android:gravity="center"
+        android:text="Weekly Move"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
 
         />
-    <VideoView
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
 
-        />
-    <TextView
-        android:layout_height="wrap_content"
+    <VideoView
+        android:id="@+id/VideoView"
         android:layout_width="match_parent"
-        android:text="Progress"
+
+        android:layout_height="300dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
 

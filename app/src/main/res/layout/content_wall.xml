@@ -14,14 +14,19 @@
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         />
+
     <EditText
-        android:id="@+id/Post"
+        android:id="@+id/postEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="Your Post"
         android:inputType="textPersonName"
-        android:text="" />
+        android:text=""
+        android:textColor="@android:color/black"
+        android:textColorHighlight="#FF8F00"
+        android:textColorLink="#FF8F00"
+        android:textCursorDrawable="@color/colorPrimary" />
     <ImageButton
         android:id="@+id/addImage"
         android:onClick="OpenGallery"
@@ -29,7 +34,7 @@
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_menu_camera" />
     <Button
-        android:id="@+id/postButton"
+        android:id="@+id/post_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="UpdatePost"
@@ -37,9 +42,12 @@
 
     <ListView
         android:id="@+id/List"
-        android:background="#bebad8"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.55">
+        android:layout_weight="0.55"
+        android:background="@drawable/postbackround"
+        android:divider="@color/cardview_dark_background"
+        android:dividerHeight=".55dp">
+
     </ListView>
 </LinearLayout>

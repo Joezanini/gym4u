@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,7 +17,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,18 +28,30 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 public class Wall extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
+    MyDB db;
     public Button NewPostButton;
     public ImageView picturePost;
     public EditText newPost;
     private static final int galleryPick = 1;
     private Uri ImageUri;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        db = new MyDB(this);
         setContentView(R.layout.activity_wall);
+        showPosts();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -53,10 +64,10 @@ public class Wall extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        NewPostButton = (Button) findViewById(R.id.postButton);
+        NewPostButton = (Button) findViewById(R.id.post_button);
         picturePost = (ImageView) findViewById(R.id.postImage);
         picturePost.setVisibility(View.INVISIBLE);
-        newPost = findViewById(R.id.Post);
+        newPost = findViewById(R.id.postEditText);
 
         String id = FirebaseAuth.getInstance().getUid();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
@@ -168,13 +179,75 @@ public class Wall extends AppCompatActivity
         }
     }
 
+
+    public static String getDate(){
+        Date date = new Date();
+        //lower case h = 12 hr time, a = use AM/PM
+        String strDateFormat = "MM/dd/yyyy";
+        DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+        String formattedDate = dateFormat.format(date);
+        return formattedDate;
+    }
+
+    public static String getTime(){
+        Date time = new Date();
+        //lower case h = 12 hr time, a = use AM/PM
+        String strTimeFormat = "h:mm a";
+        DateFormat timeFormat = new SimpleDateFormat(strTimeFormat);
+        String formattedTime = timeFormat.format(time);
+        return formattedTime;
+
+    }
+
+
+
+
     public void UpdatePost(View view) {
         if(newPost.getText().toString().isEmpty()){
             Toast.makeText(this, "no post content", Toast.LENGTH_LONG).show();
             return;
         }
         else {
-            String Description = newPost.getText().toString();
+            String post = newPost.getText().toString();
+            newPost.setText("");
+            String date = getDate();
+            String time = getTime();
+
+            String name = "Amelia";
+
+
+            String table = "gymPosts";
+           // String clientName = name.toString();
+            boolean result = db.betaInsert(table,name,post,date,time);
+            if(result == true) {
+                //db.view();
+               // Toast.makeText(Wall.this, "DOWNLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
+                showPosts();
+
+            }else{
+                Toast.makeText(Wall.this, "POST UNSUCCESSFUL", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
+
+
+
+    public void showPosts(){
+
+        ArrayList postArr = new ArrayList();
+        String table = "gymPosts";
+        List<Postdata>posts = db.getEverything(table);
+        for(Postdata p : posts){
+
+            postArr.add(p);
+
+        }
+        postadapter adapter = new postadapter(this,R.layout.listviewscreen,postArr);
+        ListView myListView = findViewById(R.id.List);
+        myListView.setAdapter(adapter);
+
+
+    }
+
 }

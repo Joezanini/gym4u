@@ -24,7 +24,7 @@ public class postadapter extends ArrayAdapter<Postdata> {
     @SuppressLint("ViewHolder")
     public View getView(int position, View convertView, ViewGroup parent){
         String title = getItem(position).getTitle();
-        Bitmap img = getItem(position).getImg();
+        //Bitmap img = getItem(position).getImg();
         String post = getItem(position).getPost();
         String date = getItem(position).getDate();
         String time = getItem(position).getTime();
@@ -35,7 +35,7 @@ public class postadapter extends ArrayAdapter<Postdata> {
         convertView = inflater.inflate(mResource, parent, false);
 
         TextView txt = convertView.findViewById(R.id.textName);
-        ImageView pic = convertView.findViewById(R.id.img);
+       // ImageView pic = convertView.findViewById(R.id.img);
         TextView postDesc = convertView.findViewById(R.id.textPost);
         TextView dateDesc = convertView.findViewById(R.id.textDate);
         TextView timeDesc = convertView.findViewById(R.id.textTime);
@@ -45,7 +45,7 @@ public class postadapter extends ArrayAdapter<Postdata> {
         Log.d("String", log);
 
         txt.setText(title);
-        pic.setImageBitmap(img);
+       // pic.setImageBitmap(img);
         postDesc.setText(post);
         dateDesc.setText(date);
         timeDesc.setText(time);

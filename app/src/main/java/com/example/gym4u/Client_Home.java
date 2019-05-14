@@ -15,8 +15,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -35,6 +37,16 @@ public class Client_Home extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // Everything to get video running
+        VideoView videoView = findViewById(R.id.VideoView);
+        videoView.setVideoPath("android.resource://" + getPackageName() + "/" + R.raw.kurtosiander);
+        videoView.start();
+
+        MediaController mediaController = new MediaController(this);
+        mediaController.setAnchorView(videoView);
+        videoView.setMediaController(mediaController);
+
+        //end video stuff
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -57,7 +69,7 @@ public class Client_Home extends AppCompatActivity
                 String gym = (String) dataSnapshot.getValue();
                 LinearLayout ll = findViewById(R.id.layoutContent);
                 if(gym.matches("Dynamic MMA")) {
-                    ll.setBackgroundResource(R.drawable.dynamic);
+                   // ll.setBackgroundResource(R.drawable.dynamic);
                 }
                 else{
                     Toast.makeText(Client_Home.this, "the gym is not dynamic", Toast.LENGTH_LONG).show();
@@ -76,7 +88,7 @@ public class Client_Home extends AppCompatActivity
                 String post = (String) dataSnapshot.getValue();
                 Log.d("Error:", post);
                 TextView name = findViewById(R.id.navHeadName);
-                name.setText(post);
+                //name.setText(post);
             }
 
             @Override

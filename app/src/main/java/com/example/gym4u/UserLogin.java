@@ -31,12 +31,12 @@ public class UserLogin extends AppCompatActivity {
         //Get Firebase auth instance
         auth = FirebaseAuth.getInstance();
 
-
+/*
         if (auth.getCurrentUser() != null) {
             startActivity(new Intent(UserLogin.this, UserRegister.class));
             finish();
         }
-
+*/
 
         setContentView(R.layout.activity_user_login);
         inputEmail = (EditText) findViewById(R.id.email);
