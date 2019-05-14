@@ -1,11 +1,9 @@
 package com.example.gym4u;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -46,10 +44,7 @@ public class Wall extends AppCompatActivity
     public EditText newPost;
     private static final int galleryPick = 1;
     private Uri ImageUri;
-    SharedPreferences sh;
-    String post;
 
-    TextView name;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,8 +55,6 @@ public class Wall extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        name = findViewById(R.id.navHeadName);
-        sh = getSharedPreferences("myPrefs", 0);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -70,8 +63,6 @@ public class Wall extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        View headerView = navigationView.getHeaderView(0);
-        name = headerView.findViewById(R.id.navHeadName);
 
         NewPostButton = (Button) findViewById(R.id.post_button);
         picturePost = (ImageView) findViewById(R.id.postImage);
@@ -97,7 +88,7 @@ public class Wall extends AppCompatActivity
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                post = (String) dataSnapshot.getValue();
+                String post = (String) dataSnapshot.getValue();
                 Log.d("Error:", post);
                 TextView name = findViewById(R.id.navHeadName);
                 name.setText(post);
@@ -109,29 +100,6 @@ public class Wall extends AppCompatActivity
             }
         });
 
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("name", post);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-
-        if (savedInstanceState != null && savedInstanceState.containsKey("name")) {
-            this.name.setText(savedInstanceState.get("name").toString());
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        SharedPreferences.Editor edit = this.sh.edit();
-        edit.putString("name", this.name.getText().toString());
-        edit.apply();
     }
 
     @Override
@@ -176,28 +144,15 @@ public class Wall extends AppCompatActivity
 
         if (id == R.id.nav_annoucements) {
             Intent intent = new Intent(Wall.this, Announcement.class);
-            String s = name.getText().toString();
-            intent.putExtra("name", s);
             startActivity(intent);
         } else if (id == R.id.nav_wall) {
             Intent intent = new Intent(Wall.this, Wall.class);
-            String s = name.getText().toString();
-            intent.putExtra("name", s);
             startActivity(intent);
         } else if (id == R.id.nav_gym) {
             Intent intent = new Intent(Wall.this, Urgym.class);
-            String s = name.getText().toString();
-            intent.putExtra("name", s);
             startActivity(intent);
         } else if (id == R.id.nav_heart) {
             Intent intent = new Intent(Wall.this, Urheart.class);
-            String s = name.getText().toString();
-            intent.putExtra("name", s);
-            startActivity(intent);
-        } else if (id == R.id.nav_home) {
-            Intent intent = new Intent(Wall.this, Client_Home.class);
-            String s = name.getText().toString();
-            intent.putExtra("name", s);
             startActivity(intent);
         }
 
@@ -275,4 +230,24 @@ public class Wall extends AppCompatActivity
 
         }
     }
+
+
+
+    public void showPosts(){
+
+        ArrayList postArr = new ArrayList();
+        String table = "gymPosts";
+        List<Postdata>posts = db.getEverything(table);
+        for(Postdata p : posts){
+
+            postArr.add(p);
+
+        }
+        postadapter adapter = new postadapter(this,R.layout.listviewscreen,postArr);
+        ListView myListView = findViewById(R.id.List);
+        myListView.setAdapter(adapter);
+
+
+    }
+
 }
