@@ -5,6 +5,9 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_home"
+            android:title="Your Home"/>
+        <item
             android:id="@+id/nav_annoucements"
             android:icon="@drawable/baseline_assignment_ind_black_18dp"
             android:title="Announcements" />
