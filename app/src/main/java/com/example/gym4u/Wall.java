@@ -221,6 +221,7 @@ public class Wall extends AppCompatActivity
         }
         else {
             String Description = newPost.getText().toString();
+
         }
     }
 }

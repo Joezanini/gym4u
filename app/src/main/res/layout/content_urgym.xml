@@ -8,31 +8,12 @@
     tools:context=".Urgym"
     android:orientation="vertical"
     tools:showIn="@layout/app_bar_urgym">
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Attendance"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:gravity="center"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Class Schedule"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:gravity="center"
-        />
 
-    <TextView
+    <fragment
+        android:id="@+id/dynamicSchedule"
+        class="com.example.gym4u.dynamic_fragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Gym Hours"
-        android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-        android:gravity="center"/>
-    <EditText
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Gym hours here"
-        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1"
-        android:gravity="center"/>
+        android:layout_height="match_parent">
+    </fragment>
 </LinearLayout>
