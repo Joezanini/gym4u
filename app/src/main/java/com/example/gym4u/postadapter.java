@@ -1,5 +1,5 @@
 package com.example.gym4u;
-
+/*
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -16,6 +16,7 @@ import java.util.ArrayList;
 public class postadapter extends ArrayAdapter<Postdata> {
     private Context mContext;
     int mResource;
+
     public postadapter(Context context, int resource, ArrayList<Postdata> objects){
         super(context, resource,objects);
         mContext = context;
@@ -52,4 +53,4 @@ public class postadapter extends ArrayAdapter<Postdata> {
         return convertView;
 
     }
-}
+*/

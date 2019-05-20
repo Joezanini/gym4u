@@ -23,6 +23,11 @@
             android:id="@+id/nav_heart"
             android:icon="@drawable/baseline_favorite_border_black_18dp"
             android:title="Your Heart"/>
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/baseline_favorite_border_black_18dp"
+            android:title="Your Profile" />
+
     </group>
 
 
