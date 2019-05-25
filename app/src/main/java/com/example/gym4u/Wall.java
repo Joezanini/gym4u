@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -154,6 +155,9 @@ public class Wall extends AppCompatActivity
         } else if (id == R.id.nav_heart) {
             Intent intent = new Intent(Wall.this, Urheart.class);
             startActivity(intent);
+        }else if(id == R.id.nav_profile){
+        Intent intent = new Intent(Wall.this, Your_Profile.class);
+        startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -208,25 +212,39 @@ public class Wall extends AppCompatActivity
             return;
         }
         else {
-            String post = newPost.getText().toString();
-            newPost.setText("");
-            String date = getDate();
-            String time = getTime();
 
-            String name = "Amelia";
+            String id = FirebaseAuth.getInstance().getUid();
+            final FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference ref = database.getReference("Users/"+id+"/name");
+            ref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String name = (String) dataSnapshot.getValue();
+                    Log.d("Error:", name);
+                    String post = newPost.getText().toString();
+                    newPost.setText("");
+                    String date = getDate();
+                    String time = getTime();
+
+                    Postdata postdata = new Postdata();
+                    postdata.setName(name);
+                    postdata.setDate(date);
+                    postdata.setPost(post);
+                    postdata.setTime(time);
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Gyms").child("Dynamic").child("posts");
+                    String newRef = ref.push().getKey();
+                    ref.child(newRef).setValue(postdata);
+                           showPosts();
+
+                }
 
 
-            String table = "gymPosts";
-           // String clientName = name.toString();
-            boolean result = db.betaInsert(table,name,post,date,time);
-            if(result == true) {
-                //db.view();
-               // Toast.makeText(Wall.this, "DOWNLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
-                showPosts();
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    System.out.println("The read failed: " + databaseError.getCode());
+                }
+                });
 
-            }else{
-                Toast.makeText(Wall.this, "POST UNSUCCESSFUL", Toast.LENGTH_SHORT).show();
-            }
 
         }
     }
@@ -235,6 +253,7 @@ public class Wall extends AppCompatActivity
 
     public void showPosts(){
 
+       /*
         ArrayList postArr = new ArrayList();
         String table = "gymPosts";
         List<Postdata>posts = db.getEverything(table);
@@ -246,6 +265,40 @@ public class Wall extends AppCompatActivity
         postadapter adapter = new postadapter(this,R.layout.listviewscreen,postArr);
         ListView myListView = findViewById(R.id.List);
         myListView.setAdapter(adapter);
+        */
+
+        ArrayList postArr = new ArrayList();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Gyms").child("Dynamic").child("posts");
+
+
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ArrayList postArr = new ArrayList();
+
+
+                for(DataSnapshot postSnapShot: dataSnapshot.getChildren()){
+                    Postdata post = (Postdata) postSnapShot.getValue(Postdata.class);
+                    postArr.add(post);
+
+                }
+
+                 postadapter adapter = new postadapter(Wall.this,R.layout.listviewscreen,postArr);
+                ListView myListView = findViewById(R.id.List);
+                myListView.setAdapter(adapter);
+
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("VIEW INSERT","INserting FAILED");
+            }
+        });
+
+
+
 
 
     }

@@ -3,11 +3,12 @@ package com.example.gym4u;
 import android.graphics.Bitmap;
 
 class Postdata {
-    private String title;
+    private String name;
     private Bitmap img;
-    private int id;
     private  String post;
     private String date;
+    private String time;
+
 
     public String getPost() {
         return post;
@@ -33,16 +34,16 @@ class Postdata {
         this.time = time;
     }
 
-    private String time;
 
 
 
-    public String getTitle() {
-        return title;
+
+    public String getName() {
+        return name;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Bitmap getImg() {
@@ -53,11 +54,5 @@ class Postdata {
         this.img = img;
     }
 
-    public int getId() {
-        return id;
-    }
 
-    public void setId(int id) {
-        this.id = id;
-    }
 }

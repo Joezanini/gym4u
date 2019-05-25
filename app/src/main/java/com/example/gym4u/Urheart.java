@@ -131,6 +131,9 @@ public class Urheart extends AppCompatActivity
             String s = name.getText().toString();
             intent.putExtra("name", s);
             startActivity(intent);
+        }else if(id == R.id.nav_profile){
+            Intent intent = new Intent(Urheart.this, Your_Profile.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

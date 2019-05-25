@@ -84,6 +84,9 @@ public class Urgym extends AppCompatActivity
         } else if (id == R.id.nav_heart) {
             Intent intent = new Intent(Urgym.this, Urheart.class);
             startActivity(intent);
+        }else if(id == R.id.nav_profile){
+            Intent intent = new Intent(Urgym.this, Your_Profile.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

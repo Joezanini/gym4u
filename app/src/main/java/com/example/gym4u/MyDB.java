@@ -160,7 +160,7 @@ class MyDB extends SQLiteOpenHelper {
         if(cursor.moveToFirst()){
             do{
                 Postdata post = new Postdata();
-                post.setTitle(cursor.getString(1));
+                post.setName(cursor.getString(1));
                 /*byte[] outImage = cursor.getBlob(2);
                 if(outImage != null) {
                     Bitmap bMap = BitmapFactory.decodeByteArray(outImage, 0, outImage.length);
