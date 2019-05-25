@@ -1,5 +1,6 @@
-package com.example.gym4u;
 
+package com.example.gym4u;
+/*
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -9,6 +10,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
+
+import com.example.gym4u.Postdata;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -150,7 +153,7 @@ class MyDB extends SQLiteOpenHelper {
         cv.put("BLOB", image);
         db.execSQL("UPDATE " + TABLE_NAME + "SET TITLE = \"" + s + "\", BLOB = \"" + image + "\" WHERE TITLE = \"" + s + "\" OR BLOB = \"" + image + "\";");
     }
-    */
+
     public List<Postdata> getEverything(String table){
         SQLiteDatabase db = this.getWritableDatabase();
         String NAME_TABLE = table;
@@ -170,7 +173,7 @@ class MyDB extends SQLiteOpenHelper {
                 else{
                     post.setImg(null);
                 }
-                */
+
                 post.setPost(cursor.getString(2));
                 post.setDate(cursor.getString(3));
                 post.setTime(cursor.getString(4));
@@ -182,7 +185,7 @@ class MyDB extends SQLiteOpenHelper {
         return allTheData;
 
     }
-    /*
+
     public List<PicData>getRange(int start, int end){
         SQLiteDatabase db = this.getWritableDatabase();
         List<PicData> rangeData = new ArrayList<>();
@@ -232,5 +235,3 @@ class MyDB extends SQLiteOpenHelper {
         return true;
     }
 */
-}
-

@@ -4,11 +4,19 @@ import android.graphics.Bitmap;
 
 class Postdata {
     private String name;
-    private Bitmap img;
-    private  String post;
-    private String date;
+    //private Bitmap img;
+    private String img;
+    //private int id;
+    private  String date;
     private String time;
 
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
 
     public String getPost() {
         return post;
@@ -16,6 +24,16 @@ class Postdata {
 
     public void setPost(String post) {
         this.post = post;
+    }
+
+    private String post;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getDate() {
@@ -33,19 +51,7 @@ class Postdata {
     public void setTime(String time) {
         this.time = time;
     }
-
-
-
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
+/*
     public Bitmap getImg() {
         return img;
     }
@@ -54,5 +60,12 @@ class Postdata {
         this.img = img;
     }
 
+   public int getId() {
+        return id;
+    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+    */
 }

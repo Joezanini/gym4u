@@ -34,8 +34,7 @@ import java.util.List;
 
 public class Announcement extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-
-    MyDB db;
+//    MyDB db;
     public Button NewPostButton;
     public ImageView picturePost;
     public EditText newPost;
@@ -51,8 +50,8 @@ public class Announcement extends AppCompatActivity
         setContentView(R.layout.activity_announcement);
         String date = getDate();
         String time = getTime();
-        db = new MyDB(this);
-        showPosts();
+       // db = new MyDB(this);
+      //  showPosts();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -171,7 +170,7 @@ public class Announcement extends AppCompatActivity
         return true;
     }
 
-
+/*
     public void showPosts(){
 
         ArrayList postArr = new ArrayList();
@@ -189,7 +188,7 @@ public class Announcement extends AppCompatActivity
 
     }
 
-
+*/
     public static String getDate(){
         Date date = new Date();
         //lower case h = 12 hr time, a = use AM/PM
