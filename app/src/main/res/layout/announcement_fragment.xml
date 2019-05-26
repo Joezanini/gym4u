@@ -1,22 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".Wall"
-    android:orientation="vertical"
-    tools:showIn="@layout/app_bar_wall">
+    android:orientation="vertical">
 
     <ImageView
-        android:id= "@+id/postImage1"
+        android:id= "@+id/postImageForAnnoucement"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         />
 
     <EditText
-        android:id="@+id/postEditText"
+        android:id="@+id/postEditTextforAnnoucements"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10"
@@ -28,23 +24,16 @@
         android:textColorLink="#FF8F00"
         android:textCursorDrawable="@color/colorPrimary" />
     <ImageButton
-        android:id="@+id/addImage"
-        android:onClick="OpenGallery"
+        android:id="@+id/addImageforAnnoucementButton"
+        android:onClick="OpenGallery1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:srcCompat="@drawable/ic_menu_camera" />
     <Button
-        android:id="@+id/post_button"
+        android:id="@+id/post_button_for_annoucement"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="UpdatePost"
+        android:onClick="UpdatePost1"
         android:text="Create NewPost" />
-
-    <android.support.v7.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/recycle_view"
-        android:background="@drawable/postbackround"
-        />
 
 </LinearLayout>

@@ -5,11 +5,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,36 +32,44 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
 public class Announcement extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-//    MyDB db;
     public Button NewPostButton;
     public ImageView picturePost;
     public EditText newPost;
     private static final int galleryPick = 1;
     private Uri ImageUri;
-
-
+    private DatabaseReference mDataRef;
+    private FirebaseStorage mStoreRef;
+    private RecyclerView mRecycleView;
+    private String name;
+    private View postFrag;
+    public Fragment announcement_fragment;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announcement);
-        String date = getDate();
-        String time = getTime();
-       // db = new MyDB(this);
-      //  showPosts();
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //postFrag = findViewById(R.id.PostForInstructorFrag);
+     //   postFrag.setVisibility(View.GONE);
+      //  FragmentManager fragmentManager=this.getSupportFragmentManager();
+       // FragmentTransaction fragmentTransaction =fragmentManager.beginTransaction();
+        //fragmentTransaction.attach(announcement_fragment);
+        //fragmentTransaction.commit();
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -66,15 +81,11 @@ public class Announcement extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //NewPostButton = (Button) findViewById(R.id.post_button);
-        //picturePost = (ImageView) findViewById(R.id.postImage);
-        //picturePost.setVisibility(View.INVISIBLE);
-        //newPost = findViewById(R.id.postEditText);
 
         String id = FirebaseAuth.getInstance().getUid();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Users/"+id+"/name");
-        DatabaseReference refG = database.getReference("Users/"+id+"/gym");
+        /*DatabaseReference refG = database.getReference("Users/"+id+"/gym");
         refG.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -85,8 +96,61 @@ public class Announcement extends AppCompatActivity
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
+        });*/
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                name = (String) dataSnapshot.getValue();
+                Log.d("Error:", name);
+                //name.setText(post);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
         });
 
+
+        mDataRef = FirebaseDatabase.getInstance().getReference("Gyms").child("Dynamic").child("announcements");
+        mDataRef.addValueEventListener(new ValueEventListener() {
+                                           @Override
+                                           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                               mRecycleView = (RecyclerView) findViewById(R.id.recycle_view_for_annoucements);
+                                               List<Postdata> list = new ArrayList<>();
+                                               Adapter adapter = new Adapter(list, GlideApp.with(Announcement.this));
+                                               mRecycleView.setLayoutManager(new LinearLayoutManager(Announcement.this));
+                                               mRecycleView.setAdapter(adapter);
+                                               List<Postdata> sampleList = new ArrayList<>();
+                                               for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                                   if (ds.child("name").getValue() == null) {
+                                                       Log.d("TAG", "Empty name");
+                                                   } else {
+                                                       Postdata obj = new Postdata();
+                                                       String name = ds.child("name").getValue(String.class);
+                                                       String post = ds.child("post").getValue(String.class);
+                                                       String date = ds.child("date").getValue(String.class);
+                                                       String time = ds.child("time").getValue(String.class);
+                                                       obj.setName(name);
+                                                       obj.setPost(post);
+                                                       obj.setDate(date);
+                                                       obj.setTime(time);
+                                                       sampleList.add(obj);
+                                                       Log.d("TAG", name + " / " + post + " / " + date + " / " + time);
+                                                   }
+                                               }
+                                               list.addAll(sampleList);
+                                               adapter.notifyDataSetChanged();
+                                               Collections.reverse(list);
+                                           }
+
+
+                                           @Override
+                                           public void onCancelled(@NonNull DatabaseError databaseError) {
+                                               Log.d("TAG", "canceled");
+                                           }
+                                       }
+        );
 
     }
 
@@ -126,25 +190,6 @@ public class Announcement extends AppCompatActivity
 
 
 
-    public void OpenGallery(View view) {
-        Intent galleryImage = new Intent();
-        galleryImage.setAction(Intent.ACTION_GET_CONTENT);
-        galleryImage.setType("image/*");
-        startActivityForResult(galleryImage,galleryPick);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == galleryPick && resultCode == RESULT_OK && data != null){
-            ImageUri = data.getData();
-            picturePost.setVisibility(View.VISIBLE);
-            picturePost.setImageURI(ImageUri);
-        }
-    }
-
-
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -169,74 +214,5 @@ public class Announcement extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-/*
-    public void showPosts(){
-
-        ArrayList postArr = new ArrayList();
-        String table = "announcements";
-        List<Postdata> posts = db.getEverything(table);
-        for(Postdata p : posts){
-
-            postArr.add(p);
-
-        }
-        postadapter adapter = new postadapter(this,R.layout.listviewscreen,postArr);
-        ListView myListView = findViewById(R.id.List);
-        myListView.setAdapter(adapter);
-
-
-    }
-
-*/
-    public static String getDate(){
-        Date date = new Date();
-        //lower case h = 12 hr time, a = use AM/PM
-        String strDateFormat = "MM/dd/yyyy";
-        DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
-        String formattedDate = dateFormat.format(date);
-        return formattedDate;
-    }
-
-    public static String getTime(){
-        Date time = new Date();
-        //lower case h = 12 hr time, a = use AM/PM
-        String strTimeFormat = "h:mm a";
-        DateFormat timeFormat = new SimpleDateFormat(strTimeFormat);
-        String formattedTime = timeFormat.format(time);
-        return formattedTime;
-
-    }
-/*
-    public void UpdatePost(View view) {
-        if(newPost.getText().toString().isEmpty()){
-            Toast.makeText(this, "no post content", Toast.LENGTH_LONG).show();
-            return;
-        }
-        else {
-           // String post = newPost.getText().toString();
-          //   newPost.setText("");
-            String date = getDate();
-            String time = getTime();
-            String name = "Instructor";
-            String table = "announcements";
-            boolean result = db.betaInsert(table,name,post,date,time);
-            if(result == true) {
-                //db.view();
-                //Toast.makeText(Announcement.this, "DOWNLOAD SUCCESSFUL", Toast.LENGTH_SHORT).show();
-                showPosts();
-
-            }else{
-                Toast.makeText(Announcement.this, "POST UNSUCCESSFUL", Toast.LENGTH_SHORT).show();
-            }
-
-        }
-    }
-
-
-
-*/
-
-
 
 }

@@ -64,8 +64,6 @@ import java.util.UUID;
 public class Wall extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-
-    //MyDB db;
     public Button NewPostButton;
     public ImageView picturePost;
     public EditText newPost;
@@ -77,13 +75,12 @@ public class Wall extends AppCompatActivity
     private DatabaseReference mDataRef;
     private FirebaseStorage mStoreRef;
     private RecyclerView mRecycleView;
-    public  String saveDate, saveTime, saveName, downloadUrl, photoStringLink;
+    public  String saveDate, saveTime, saveName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wall);
-        // showPosts();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -133,13 +130,6 @@ public class Wall extends AppCompatActivity
         });
 
         mDataRef = FirebaseDatabase.getInstance().getReference("Gyms").child("Dynamic").child("posts");
-        //mRecycleView = (RecyclerView) findViewById(R.id.recycle_view);
-        //List<Postdata> list = new ArrayList<>();
-        //Adapter adapter = new Adapter(list);
-        //mRecycleView.setLayoutManager(new LinearLayoutManager(this));
-        //mRecycleView.setAdapter(adapter);
-
-
         mDataRef.addValueEventListener(new ValueEventListener() {
                                            @Override
                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -163,21 +153,8 @@ public class Wall extends AppCompatActivity
                                                        obj.setDate(date);
                                                        obj.setTime(time);
                                                        sampleList.add(obj);
-                                                       //String safeName = date + time;
-                                                       //Log.d("TAG", "SafeName :" + safeName);
-                                                       /*try{
-                                                       StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("PostImages").child(safeName+".jpg");
-                                                       ImageView imageView = findViewById(R.id.PostImg);
-                                                       GlideApp.with(Wall.this )
-                                                               .load(storageReference)
-                                                               .into(imageView);}
-                                                       catch(Exception exception){
-                                                            Log.d("TAG", "No pictures");
-                                                       }*/
                                                        Log.d("TAG", name + " / " + post + " / " + date + " / " + time);
                                                    }
-                                                   //list.add(obj);
-                                                   //adapter.notifyDataSetChanged();
                                                }
                                                list.addAll(sampleList);
                                                adapter.notifyDataSetChanged();

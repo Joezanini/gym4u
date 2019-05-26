@@ -3,27 +3,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".Announcement"
     tools:showIn="@layout/app_bar_announcement"
     android:orientation="vertical">
 
+    <fragment
+        android:id="@+id/PostForInstructorFrag"
+        class="com.example.gym4u.announcement_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+    </fragment>
 
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:layout_weight="0.20"
+        android:layout_height="150dp"
         android:background="@drawable/announcement" />
 
-    <ListView
-        android:id="@+id/List"
+    <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.55"
-        android:background="@color/cardview_light_background">
+        android:layout_height="wrap_content"
+        android:id="@+id/recycle_view_for_annoucements"
+        />
 
-
-    </ListView>
 </LinearLayout>
