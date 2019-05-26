@@ -1,8 +1,13 @@
 package com.example.gym4u;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,6 +17,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,6 +61,8 @@ public class Urheart extends AppCompatActivity
          * name text edit value. else, we use the database
          * value.
          */
+
+
         if(post == null) {
             String s = getIntent().getStringExtra("name");
             Log.d(TAG, "onCreate: " + s);
@@ -62,6 +71,46 @@ public class Urheart extends AppCompatActivity
             //name = findViewById(R.id.navHeadName);
             name.setText(post);
         }
+
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 0);
+        }
+
+        final Button button = findViewById(R.id.urHeart_start);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                Intent intent;
+                intent = new Intent(Urheart.this, Measure.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+
+        String number = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("LAST_MEASURE", "0");
+        if (number!="0") {
+
+            TextView tv = (TextView) findViewById(R.id.number);
+            tv.setText(number);
+
+            RatingBar rb = (RatingBar) findViewById(R.id.ratingBar);
+            tv = (TextView) findViewById(R.id.text);
+            if (Double.parseDouble(number) > 90) {
+                //Cosa mala
+                rb.setRating(0);
+                tv.setText("Your heart rate is to high");
+            } else {
+                //Cosa buena
+                rb.setRating(1);
+                tv.setText("Your heart rate is correct");
+            }
+        }
+
     }
 
     @Override
@@ -108,28 +157,21 @@ public class Urheart extends AppCompatActivity
 
         if (id == R.id.nav_annoucements) {
             Intent intent = new Intent(Urheart.this, Announcement.class);
-            String s = name.getText().toString();
-            intent.putExtra("name", s);
             startActivity(intent);
         } else if (id == R.id.nav_wall) {
             Intent intent = new Intent(Urheart.this, Wall.class);
-            String s = name.getText().toString();
-            intent.putExtra("name", s);
             startActivity(intent);
         } else if (id == R.id.nav_gym) {
             Intent intent = new Intent(Urheart.this, Urgym.class);
-            String s = name.getText().toString();
-            intent.putExtra("name", s);
             startActivity(intent);
         } else if (id == R.id.nav_heart) {
             Intent intent = new Intent(Urheart.this, Urheart.class);
-            String s = name.getText().toString();
-            intent.putExtra("name", s);
             startActivity(intent);
         } else if (id == R.id.nav_home) {
             Intent intent = new Intent(Urheart.this, Client_Home.class);
-            String s = name.getText().toString();
-            intent.putExtra("name", s);
+            startActivity(intent);
+        }else if(id == R.id.nav_profile){
+            Intent intent = new Intent(Urheart.this, Your_Profile.class);
             startActivity(intent);
         }
 

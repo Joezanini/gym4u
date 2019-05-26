@@ -67,7 +67,7 @@ SATURDAY  10:30am-12:00pm</string>
 TUESDAY  11:00am-12:00pm\n
 WEDNESDAY  11:00am-12:00pm\n
 THURSDAY  11:00am-12:00pm</string>
-    <string name= "KarateKidsClass">MONDAY  5:30pm-6:25pm\n
+    <string name="KarateKidsClass">MONDAY  5:30pm-6:25pm\n
     WEDNESDAY  5:30pm-6:25pm\n
     FRIDAY  5:30pm-6:25pm\n
     </string>
@@ -93,6 +93,14 @@ Saturday, 9 a.m.–1 p.m.</string>
         <item>Tiger MMA</item>
         <item>Lions Den</item>
     </array>
+    <string name="title_activity_your_profile">Your_Profile</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="menu_tools">Tools</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_send">Send</string>
 
 
 </resources>

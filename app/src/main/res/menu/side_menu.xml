@@ -6,14 +6,15 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
+            android:icon="@drawable/outline_home_black_18dp"
             android:title="Your Home"/>
         <item
             android:id="@+id/nav_annoucements"
-            android:icon="@drawable/baseline_assignment_ind_black_18dp"
+            android:icon="@drawable/announce"
             android:title="Announcements" />
         <item
             android:id="@+id/nav_wall"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/comments"
             android:title="Wall"/>
         <item
             android:id="@+id/nav_gym"
@@ -25,9 +26,8 @@
             android:title="Your Heart"/>
         <item
             android:id="@+id/nav_profile"
-            android:icon="@drawable/baseline_favorite_border_black_18dp"
-            android:title="Your Profile" />
-
+            android:icon="@drawable/profileicon"
+            android:title="Your Profile"/>
     </group>
 
 

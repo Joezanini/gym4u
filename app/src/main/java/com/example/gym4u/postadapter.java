@@ -24,7 +24,7 @@ public class postadapter extends ArrayAdapter<Postdata> {
     }
     @SuppressLint("ViewHolder")
     public View getView(int position, View convertView, ViewGroup parent){
-        String title = getItem(position).getTitle();
+        String title = getItem(position).getName();
         //Bitmap img = getItem(position).getImg();
         String post = getItem(position).getPost();
         String date = getItem(position).getDate();

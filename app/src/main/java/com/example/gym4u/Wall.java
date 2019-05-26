@@ -64,6 +64,8 @@ import java.util.UUID;
 public class Wall extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+
+    //MyDB db;
     public Button NewPostButton;
     public ImageView picturePost;
     public EditText newPost;
@@ -81,6 +83,7 @@ public class Wall extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wall);
+        // showPosts();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
