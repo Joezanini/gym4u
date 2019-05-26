@@ -18,8 +18,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.Layout;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +28,7 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,13 +37,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalTime;
 import java.util.Date;
-
-import static android.location.Location.convert;
 
 public class Client_Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private static final String TAG = "yo";
+    TextView name;
+    String s;
+    FirebaseAuth mAuth;
 
 
 
@@ -142,15 +142,17 @@ public class Client_Home extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
 
         // Get a reference to our posts
         String id = FirebaseAuth.getInstance().getUid();
+        mAuth = FirebaseAuth.getInstance();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Users/"+id+"/name");
         DatabaseReference refG = database.getReference("Users/"+id+"/gym");
+        FirebaseUser cUser = mAuth.getCurrentUser();
+
+
+
         refG.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -169,6 +171,8 @@ public class Client_Home extends AppCompatActivity
                 System.out.println("The read failed: " + databaseError.getCode());
             }
         });
+
+
 // Attach a listener to read the data at our posts reference
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -176,7 +180,8 @@ public class Client_Home extends AppCompatActivity
                 String post = (String) dataSnapshot.getValue();
                 Log.d("Error:", post);
                 TextView name = findViewById(R.id.navHeadName);
-                //name.setText(post);
+                name.setText(post);
+                s = name.getText().toString();
             }
 
             @Override
