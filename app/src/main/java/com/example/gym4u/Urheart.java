@@ -1,8 +1,13 @@
 package com.example.gym4u;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -12,22 +17,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.content.Intent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -90,7 +82,7 @@ public class Urheart extends AppCompatActivity
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 Intent intent;
-                intent = new Intent(getApplicationContext(), Measure.class);
+                intent = new Intent(Urheart.this, Measure.class);
                 startActivity(intent);
             }
         });
