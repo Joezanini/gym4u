@@ -3,8 +3,11 @@ package com.example.gym4u;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -18,18 +21,24 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class Urheart extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, SensorEventListener {
     private static final String TAG = "urHeart yo";
     TextView name;
     String post;
     FirebaseUser user;
+
+    //added for simple heart rate monitor
+    Button show;
+    TextView showHeartRate;
+    SensorManager sensorMgr;
+    Sensor heartRate;
+    String heartRateValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,39 +86,49 @@ public class Urheart extends AppCompatActivity
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 0);
         }
 
-        final Button button = findViewById(R.id.urHeart_start);
+        show = findViewById(R.id.urHeart_start);
+        show.setOnClickListener(displayHeartRate);
+        showHeartRate = findViewById(R.id.number);
+        sensorMgr = (SensorManager)this.getSystemService(SENSOR_SERVICE);
+        heartRate = sensorMgr.getDefaultSensor(Sensor.TYPE_HEART_RATE);
 
-        button.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                Intent intent;
-                intent = new Intent(Urheart.this, Measure.class);
-                startActivity(intent);
-            }
-        });
+
+    }
+
+    View.OnClickListener displayHeartRate = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            setHeartrate(heartRateValue);
+        }
+    };
+
+    private void setHeartrate(String rate) {
+        showHeartRate.setText(rate);
     }
 
     @Override
     protected void onResume(){
         super.onResume();
 
-        String number = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString("LAST_MEASURE", "0");
-        if (number!="0") {
+        sensorMgr.registerListener(this , heartRate,SensorManager.SENSOR_DELAY_NORMAL);
 
-            TextView tv = (TextView) findViewById(R.id.number);
-            tv.setText(number);
+    }
 
-            RatingBar rb = (RatingBar) findViewById(R.id.ratingBar);
-            tv = (TextView) findViewById(R.id.text);
-            if (Double.parseDouble(number) > 90) {
-                //Cosa mala
-                rb.setRating(0);
-                tv.setText("Your heart rate is to high");
-            } else {
-                //Cosa buena
-                rb.setRating(1);
-                tv.setText("Your heart rate is correct");
-            }
-        }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        sensorMgr.unregisterListener((SensorEventListener) this);
+    }
+
+
+    public void onSensorChanged(SensorEvent sensorEvent) {
+        heartRateValue = Integer.toString((int) (sensorEvent.values.length > 0 ? sensorEvent.values[0] : 0.0f));
+        setHeartrate(heartRateValue);
+        Log.d(TAG, "onSensorChanged: reading hearRate");
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
 
