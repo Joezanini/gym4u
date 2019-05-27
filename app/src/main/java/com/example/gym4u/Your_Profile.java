@@ -96,7 +96,7 @@ public class Your_Profile extends AppCompatActivity
                 }
             }
         };
-*/
+
 
 
 
@@ -116,11 +116,11 @@ public class Your_Profile extends AppCompatActivity
         });
         graph.addSeries(series);
 
-        //END GRAPH STUFF
+        //END GRAPH STUFF */
 
 
 
-    } /*;*/
+    };
 
 /*
     @Override
@@ -129,8 +129,8 @@ public class Your_Profile extends AppCompatActivity
         Log.i("MAINACT", "onDestroy!");
         super.onDestroy();
     }
-*/
 
+*/
 
 
     @Override
