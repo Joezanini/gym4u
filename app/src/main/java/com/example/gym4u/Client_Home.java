@@ -4,9 +4,13 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -21,12 +25,19 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
+import com.google.android.gms.common.api.Api;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -34,7 +45,13 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -45,6 +62,11 @@ public class Client_Home extends AppCompatActivity
     //TextView name;
     //String s;
     FirebaseAuth mAuth;
+    private static final int PICK_VIDEO = 1;
+    private Uri videoUri;
+    StorageReference videoRef, storageRef;
+    String type, gym;
+    VideoView videoView;
 
 
 
@@ -123,17 +145,38 @@ public class Client_Home extends AppCompatActivity
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener);
         }
 
+        final Button videoChangeButton = findViewById(R.id.post_button_for_video);
+        String id1 = FirebaseAuth.getInstance().getUid();
+        final FirebaseDatabase database1 = FirebaseDatabase.getInstance();
+        DatabaseReference refT = database1.getReference("Users/" + id1 + "/type");
+        refT.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                type = (String) dataSnapshot.getValue();
+                if (type.matches("Client")) {
+                    videoChangeButton.setVisibility(View.GONE);
+                }
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+
+        videoView = findViewById(R.id.VideoView);
 
         // Everything to get video running
-        VideoView videoView = findViewById(R.id.VideoView);
+
+/*        VideoView videoView = findViewById(R.id.VideoView);
         videoView.setVideoPath("android.resource://" + getPackageName() + "/" + R.raw.kurtosiander);
         videoView.start();
 
         MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(videoView);
         videoView.setMediaController(mediaController);
-
+*/
         //end video stuff
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -156,19 +199,38 @@ public class Client_Home extends AppCompatActivity
         DatabaseReference refG = database.getReference("Users/"+id+"/gym");
         FirebaseUser cUser = mAuth.getCurrentUser();
 
+        storageRef = FirebaseStorage.getInstance().getReference();
+
 
 
         refG.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String gym = (String) dataSnapshot.getValue();
-                LinearLayout ll = findViewById(R.id.layoutContent);
-                if(gym.matches("Dynamic MMA")) {
-                   // ll.setBackgroundResource(R.drawable.dynamic);
-                }
-                else{
-                    Toast.makeText(Client_Home.this, "the gym is not dynamic", Toast.LENGTH_LONG).show();
-                }
+                gym = (String) dataSnapshot.getValue();
+                Log.d("Video: gym", gym);
+                videoRef = storageRef.child("/video/" + gym);
+                videoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Log.d("Video", "The video was successful");
+                        Toast.makeText(Client_Home.this, uri.toString(), Toast.LENGTH_SHORT).show();
+                        MediaController mc = new MediaController(Client_Home.this);
+                        videoView.setMediaController(mc);
+                        videoView.setVideoURI(uri);
+                        Log.d("Video", "we are halfway");
+                        videoView.requestFocus();
+                        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                            @Override
+                            public void onPrepared(MediaPlayer mediaPlayer) {
+                                mediaPlayer.setLooping(true);
+                                videoView.start();
+                            }
+                        });
+                        Log.d("Video", "Video should be started");
+                        Toast.makeText(Client_Home.this, "The video should be playing", Toast.LENGTH_LONG).show();
+                    }
+                });
+
             }
 
             @Override
@@ -196,7 +258,73 @@ public class Client_Home extends AppCompatActivity
         });
 
 
+
+
     }
+
+    public void OpenGallery(View view) {
+        Intent galleryVideo = new Intent();
+        galleryVideo.setAction(Intent.ACTION_GET_CONTENT);
+        galleryVideo.setType("video/*");
+        startActivityForResult(galleryVideo, PICK_VIDEO);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+            if (resultCode == RESULT_OK && requestCode == PICK_VIDEO && data != null) {
+                    Uri selectedVideoUri = data.getData();
+                    StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+                    videoRef = storageRef.child("/video/" + gym);
+                    //TODO: save the video in the db
+                    uploadData(selectedVideoUri);
+            }
+        }
+
+
+    private void uploadData(Uri videoUri) {
+        if(videoUri != null){
+            UploadTask uploadTask = videoRef.putFile(videoUri);
+
+            uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
+                    if(task.isSuccessful())
+                        Toast.makeText(Client_Home.this, "Upload Complete", Toast.LENGTH_SHORT).show();
+                }
+            }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                }
+            });
+            videoRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    Log.d("Video", "The video was successful");
+                    Toast.makeText(Client_Home.this, uri.toString(), Toast.LENGTH_SHORT).show();
+                    MediaController mc = new MediaController(Client_Home.this);
+                    videoView.setMediaController(mc);
+                    videoView.setVideoURI(uri);
+                    Log.d("Video", "we are halfway");
+                    videoView.requestFocus();
+                    videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                        @Override
+                        public void onPrepared(MediaPlayer mediaPlayer) {
+                            mediaPlayer.setLooping(true);
+                            videoView.start();
+                        }
+                    });
+                    Log.d("Video", "Video should be started");
+                    Toast.makeText(Client_Home.this, "The video should be playing", Toast.LENGTH_LONG).show();
+                }
+            });
+
+        }else {
+            Toast.makeText(this, "Nothing to upload", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
 
 
     public static Integer getMin() {

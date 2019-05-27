@@ -37,6 +37,14 @@
 
         android:layout_height="300dp" />
 
+    <Button
+        android:id="@+id/post_button_for_video"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="OpenGallery"
+        android:text="Update Video" />
+
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
