@@ -11,14 +11,14 @@
 
     <fragment
         android:id="@+id/PostForInstructorFrag"
-        class="com.example.gym4u.announcement_fragment"
-        android:layout_width="wrap_content"
+        android:name="com.example.gym4u.announcement_fragment"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
     </fragment>
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/viewPic"
         android:layout_width="match_parent"
         android:layout_height="150dp"
         android:background="@drawable/announcement" />
@@ -28,5 +28,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/recycle_view_for_annoucements"
         />
+
 
 </LinearLayout>
