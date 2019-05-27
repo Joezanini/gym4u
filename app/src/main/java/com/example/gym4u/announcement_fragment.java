@@ -39,7 +39,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
+/*
 public class announcement_fragment extends Fragment {
 
     private static final int galleryPick = 1;
@@ -170,3 +170,4 @@ public class announcement_fragment extends Fragment {
 
     }
 }
+*/

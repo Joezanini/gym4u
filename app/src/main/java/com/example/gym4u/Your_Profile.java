@@ -21,6 +21,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
 public class Your_Profile extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -83,7 +87,6 @@ public class Your_Profile extends AppCompatActivity
 
 
 /*
-
         locationService = new LocationService(getCtx());
         serviceintent = new JobIntentService(getCtx(), locationService.getClass()) {
             @Override
@@ -93,14 +96,14 @@ public class Your_Profile extends AppCompatActivity
                 }
             }
         };
-
+*/
 
 
 
 
 
         //GRAPH STUFF
-        /*
+
         GraphView graph = (GraphView) findViewById(R.id.graph);
         LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
                 new DataPoint(1, 5),
@@ -112,12 +115,12 @@ public class Your_Profile extends AppCompatActivity
 
         });
         graph.addSeries(series);
-        */
+
         //END GRAPH STUFF
 
 
 
-    };
+    } /*;*/
 
 /*
     @Override
@@ -126,8 +129,8 @@ public class Your_Profile extends AppCompatActivity
         Log.i("MAINACT", "onDestroy!");
         super.onDestroy();
     }
-
 */
+
 
 
     @Override

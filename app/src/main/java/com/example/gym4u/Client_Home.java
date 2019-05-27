@@ -42,8 +42,8 @@ import java.util.Date;
 public class Client_Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private static final String TAG = "yo";
-    TextView name;
-    String s;
+    //TextView name;
+    //String s;
     FirebaseAuth mAuth;
 
 
@@ -143,6 +143,11 @@ public class Client_Home extends AppCompatActivity
         toggle.syncState();
 
 
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
+
         // Get a reference to our posts
         String id = FirebaseAuth.getInstance().getUid();
         mAuth = FirebaseAuth.getInstance();
@@ -179,9 +184,9 @@ public class Client_Home extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String post = (String) dataSnapshot.getValue();
                 Log.d("Error:", post);
-                TextView name = findViewById(R.id.navHeadName);
-                name.setText(post);
-                s = name.getText().toString();
+                //TextView name = findViewById(R.id.navHeadName);
+                //name.setText(post);
+               // s = name.getText().toString();
             }
 
             @Override
@@ -243,9 +248,8 @@ public class Client_Home extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
@@ -264,6 +268,9 @@ public class Client_Home extends AppCompatActivity
         }else if(id == R.id.nav_profile){
             Intent intent = new Intent(Client_Home.this, Your_Profile.class);
             startActivity(intent);
+        }else{
+            Toast.makeText(this, "Item is null", Toast.LENGTH_LONG).show();
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

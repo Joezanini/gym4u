@@ -190,7 +190,7 @@ public class Announcement extends AppCompatActivity
 
 
 
-    @SuppressWarnings("StatementWithEmptyBody")
+    @SuppressWarnings("SgtatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.

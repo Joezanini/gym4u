@@ -75,8 +75,8 @@ public class Measure extends AppCompatActivity implements SurfaceHolder.Callback
             mCamera.release();
         }
     }
-
-    /*private static Camera.Size getSmallestPreviewSize(int width, int height, Camera.Parameters parameters) {
+/*
+    private static Camera.Size getSmallestPreviewSize(int width, int height, Camera.Parameters parameters) {
         Camera.Size result = null;
         for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
             if (size.width <= width && size.height <= height) {
@@ -90,8 +90,8 @@ public class Measure extends AppCompatActivity implements SurfaceHolder.Callback
             }
         }
         return result;
-    }*/
-
+    }
+*/
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         mCamera = Camera.open();
@@ -99,7 +99,7 @@ public class Measure extends AppCompatActivity implements SurfaceHolder.Callback
         if(parameters.getMaxExposureCompensation() != parameters.getMinExposureCompensation()){
             parameters.setExposureCompensation(0);
         }
-        /*if(parameters.isAutoExposureLockSupported()){
+       /* if(parameters.isAutoExposureLockSupported()){
             parameters.setAutoExposureLock(true);
          }*/
         /*if(parameters.isAutoWhiteBalanceLockSupported()){
@@ -140,6 +140,7 @@ public class Measure extends AppCompatActivity implements SurfaceHolder.Callback
      * FROM: http://stackoverflow.com/questions/4645960/how-to-set-android-camera-orientation-properly
      * @param camera
      */
+
     public void setCameraDisplayOrientation(android.hardware.Camera camera) {
         Camera.Parameters parameters = camera.getParameters();
         android.hardware.Camera.CameraInfo camInfo = new android.hardware.Camera.CameraInfo();
@@ -217,7 +218,7 @@ public class Measure extends AppCompatActivity implements SurfaceHolder.Callback
             averageIndex++;
 
             // Transitioned from one state to another to the same
-            /*if (newType != currentType) {
+           /* if (newType != currentType) {
                 currentType = newType;
             }*/
 
