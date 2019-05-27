@@ -1,6 +1,9 @@
 package com.example.gym4u;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,6 +29,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -33,7 +38,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -43,7 +51,7 @@ import java.util.List;
 
 public class Announcement extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    public Button NewPostButton;
+    public Button NewPostButton, addPost;
     public ImageView picturePost;
     public EditText newPost;
     private static final int galleryPick = 1;
@@ -51,9 +59,11 @@ public class Announcement extends AppCompatActivity
     private DatabaseReference mDataRef;
     private FirebaseStorage mStoreRef;
     private RecyclerView mRecycleView;
-    private String name;
+    private String name, gym, type;
     private View postFrag;
+    String destination = "AnnouncementImages";
     public Fragment announcement_fragment;
+    private FragmentManager fragmentManager = this.getSupportFragmentManager();
 
 
     @Override
@@ -64,12 +74,7 @@ public class Announcement extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        //postFrag = findViewById(R.id.PostForInstructorFrag);
-     //   postFrag.setVisibility(View.GONE);
-      //  FragmentManager fragmentManager=this.getSupportFragmentManager();
-       // FragmentTransaction fragmentTransaction =fragmentManager.beginTransaction();
-        //fragmentTransaction.attach(announcement_fragment);
-        //fragmentTransaction.commit();
+        postFrag = findViewById(R.id.PostForInstructorFrag);
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -84,19 +89,37 @@ public class Announcement extends AppCompatActivity
 
         String id = FirebaseAuth.getInstance().getUid();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Users/"+id+"/name");
-        /*DatabaseReference refG = database.getReference("Users/"+id+"/gym");
-        refG.addValueEventListener(new ValueEventListener() {
+        DatabaseReference ref = database.getReference("Users/" + id + "/name");
+        DatabaseReference refG = database.getReference("Users/" + id + "/gym");
+        DatabaseReference refT = database.getReference("Users/" + id + "/type");
+        refT.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String gym = (String) dataSnapshot.getValue();
+                type = (String) dataSnapshot.getValue();
+                if (type.matches("Client")) {
+                    postFrag.setVisibility(View.GONE);
+                }else{
+                    View view = findViewById(R.id.viewPic);
+                    view.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
                 System.out.println("The read failed: " + databaseError.getCode());
             }
-        });*/
+        });
+        refG.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                gym = (String) dataSnapshot.getValue();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
         ref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -118,7 +141,7 @@ public class Announcement extends AppCompatActivity
                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                mRecycleView = (RecyclerView) findViewById(R.id.recycle_view_for_annoucements);
                                                List<Postdata> list = new ArrayList<>();
-                                               Adapter adapter = new Adapter(list, GlideApp.with(Announcement.this));
+                                               Adapter adapter = new Adapter(list, GlideApp.with(Announcement.this), destination);
                                                mRecycleView.setLayoutManager(new LinearLayoutManager(Announcement.this));
                                                mRecycleView.setAdapter(adapter);
                                                List<Postdata> sampleList = new ArrayList<>();
@@ -151,6 +174,12 @@ public class Announcement extends AppCompatActivity
                                            }
                                        }
         );
+
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
 
     }
 
@@ -189,7 +218,6 @@ public class Announcement extends AppCompatActivity
     }
 
 
-
     @SuppressWarnings("SgtatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
@@ -215,4 +243,114 @@ public class Announcement extends AppCompatActivity
         return true;
     }
 
+    public void OpenGallery1(View view) {
+        Intent galleryImage = new Intent();
+        galleryImage.setAction(Intent.ACTION_GET_CONTENT);
+        galleryImage.setType("image/*");
+        startActivityForResult(galleryImage, galleryPick);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == galleryPick && resultCode == Activity.RESULT_OK && data != null) {
+            picturePost = postFrag.findViewById(R.id.postImageForAnnoucement);
+            ImageUri = data.getData();
+            picturePost.setVisibility(View.VISIBLE);
+            picturePost.setImageURI(ImageUri);
+            picturePost.setDrawingCacheEnabled(true);
+            picturePost.buildDrawingCache();
+            Bitmap bitmap = ((BitmapDrawable) picturePost.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data2 = baos.toByteArray();
+            String saveDate = getDate();
+            String saveTime = getTime();
+            String saveName = saveDate + saveTime;
+            mStoreRef = FirebaseStorage.getInstance();
+            StorageReference filePath = mStoreRef.getReference();
+            StorageReference imageRef = filePath.child(destination);
+            String fileName = saveName + ".jpg";
+            StorageReference spaceRef = imageRef.child(fileName);
+
+
+            UploadTask uploadTask = spaceRef.putBytes(data2);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("TAG", "Photo failure");
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.d("TAG", "Photo Sucess");
+                }
+            });
+        }
+
+    }
+
+    public static String getDate() {
+        Date date = new Date();
+        //lower case h = 12 hr time, a = use AM/PM
+        String strDateFormat = "MM/dd/yyyy";
+        DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+        String formattedDate = dateFormat.format(date);
+        return formattedDate;
+    }
+
+    public static String getTime() {
+        Date time = new Date();
+        //lower case h = 12 hr time, a = use AM/PM
+        String strTimeFormat = "h:mm a";
+        DateFormat timeFormat = new SimpleDateFormat(strTimeFormat);
+        String formattedTime = timeFormat.format(time);
+        return formattedTime;
+
+    }
+
+    public void UpdatePost1(View view) {
+        picturePost = postFrag.findViewById(R.id.postImageForAnnoucement);
+        newPost = postFrag.findViewById(R.id.postEditTextforAnnoucements);
+        addPost = postFrag.findViewById(R.id.post_button_for_annoucement);
+        String id = FirebaseAuth.getInstance().getUid();
+        final FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("Users/" + id + "/name");
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                name = (String) dataSnapshot.getValue();
+                Log.d("Error:", name);
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+        if (newPost.getText().toString().isEmpty()) {
+            Log.d("TAG", "No post activity");
+            return;
+        } else {
+            String post = newPost.getText().toString();
+            newPost.setText("");
+            picturePost.setVisibility(View.GONE);
+            String date = getDate();
+            String time = getTime();
+
+            Postdata postdata = new Postdata();
+            postdata.setName(name);
+            postdata.setDate(date);
+            postdata.setPost(post);
+            postdata.setTime(time);
+            DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference("Gyms").child("Dynamic").child("announcements");
+            String newRef = ref1.push().getKey();
+            ref1.child(newRef).setValue(postdata);
+
+        }
+
+
+    }
 }

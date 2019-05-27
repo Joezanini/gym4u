@@ -20,12 +20,15 @@ public class Adapter extends
         RecyclerView.Adapter<Adapter.ViewHolder> {
 
     private final RequestManager glide;
+    public String dest;
 
     List<Postdata> list;
 
-    Adapter(List<Postdata> newList, RequestManager glide){
+    Adapter(List<Postdata> newList, RequestManager glide, String destination){
         this.list = newList;
         this.glide = glide;
+        this.dest = destination;
+
     }
 
 
@@ -47,7 +50,7 @@ public class Adapter extends
         String safeName = obj.getDate() + obj.getTime();
         Log.d("TAG", "safename : " + safeName);
         try {
-            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child("PostImages").child(safeName+".jpg");
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(dest).child(safeName+".jpg");
             if(storageReference != null){
             glide.load(storageReference).into(viewHolder.imgOfPost);
             Log.d("TAG", "Picture Exists");}

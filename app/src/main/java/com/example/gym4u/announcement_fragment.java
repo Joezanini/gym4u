@@ -39,13 +39,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-/*
+
 public class announcement_fragment extends Fragment {
 
     private static final int galleryPick = 1;
     public ImageView picturePost;
     private Uri ImageUri;
-    public  String saveDate, saveTime, saveName;
+    public String saveDate, saveTime, saveName;
     private FirebaseStorage mStoreRef;
     private FirebaseDatabase mDataRef;
     public String name;
@@ -170,4 +170,4 @@ public class announcement_fragment extends Fragment {
 
     }
 }
-*/
+

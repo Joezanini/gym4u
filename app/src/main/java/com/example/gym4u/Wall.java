@@ -72,6 +72,7 @@ public class Wall extends AppCompatActivity
     private static final int galleryPick = 1;
     private Uri ImageUri;
     public String name;
+    String destination = "PostImages";
     ArrayList<Postdata> arrayList = new ArrayList<>();
     ArrayAdapter<Postdata> arrayAdapter;
     private DatabaseReference mDataRef;
@@ -138,7 +139,7 @@ public class Wall extends AppCompatActivity
                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                mRecycleView = (RecyclerView) findViewById(R.id.recycle_view);
                                                List<Postdata> list = new ArrayList<>();
-                                               Adapter adapter = new Adapter(list, GlideApp.with(Wall.this));
+                                               Adapter adapter = new Adapter(list, GlideApp.with(Wall.this), destination);
                                                mRecycleView.setLayoutManager(new LinearLayoutManager(Wall.this));
                                                mRecycleView.setAdapter(adapter);
                                                List<Postdata> sampleList = new ArrayList<>();
@@ -263,7 +264,7 @@ public class Wall extends AppCompatActivity
             saveName = saveDate + saveTime;
             mStoreRef = FirebaseStorage.getInstance();
             StorageReference filePath = mStoreRef.getReference();
-            StorageReference imageRef = filePath.child("PostImages");
+            StorageReference imageRef = filePath.child(destination);
             String fileName = saveName + ".jpg";
             StorageReference spaceRef = imageRef.child(fileName);
 
@@ -310,7 +311,7 @@ public class Wall extends AppCompatActivity
         } else {
             String post = newPost.getText().toString();
             newPost.setText("");
-            picturePost.setVisibility(View.INVISIBLE);
+            picturePost.setVisibility(View.GONE);
             String date = getDate();
             String time = getTime();
 
