@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -21,6 +22,7 @@ public class Adapter extends
 
     private final RequestManager glide;
     public String dest;
+    public String dest2 = "UserProfilePicture";
 
     List<Postdata> list;
 
@@ -61,6 +63,20 @@ public class Adapter extends
         catch (Exception e){
             Log.d("TAG", "No Picture for " + safeName);
         }
+        try {
+            String username = obj.getName();
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(dest2).child( username +".jpg");
+            if(storageReference != null){
+                glide.load(storageReference).placeholder(R.drawable.profile_pic).diskCacheStrategy(DiskCacheStrategy.NONE)
+                        .skipMemoryCache(true).into(viewHolder.profPic);
+                Log.d("TAG", "Picture Exists");}
+            else{
+                Log.d("TAG", "No Picture exists for this");
+            }
+        }
+        catch (Exception e){
+            Log.d("TAG", "No Picture for ");
+        }
 
         // Set item views based on your views and data model
         viewHolder.name.setText(obj.getName());
@@ -83,6 +99,7 @@ public class Adapter extends
         public TextView date;
         public TextView time;
         public ImageView imgOfPost;
+        public ImageView profPic;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -91,6 +108,7 @@ public class Adapter extends
             date = itemView.findViewById(R.id.textDate);
             time = (TextView) itemView.findViewById(R.id.textTime);
             imgOfPost = itemView.findViewById(R.id.PostImg);
+            profPic = itemView.findViewById(R.id.ProfilePicture);
         }
     }
 

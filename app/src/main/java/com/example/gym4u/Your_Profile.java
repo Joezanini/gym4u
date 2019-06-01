@@ -4,9 +4,13 @@ import android.Manifest;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -16,10 +20,33 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 //import com.jjoe64.graphview.GraphView;
 
@@ -28,6 +55,13 @@ public class Your_Profile extends AppCompatActivity
 
     LocationManager locationManager;
     LocationListener locationListener;
+    public ImageView picturePost;
+    public static final String MY_PREFS = "MyPrefs";
+    String destination, id, name;
+    private static final int galleryPick = 1;
+    private Uri ImageUri;
+    private FirebaseStorage mStoreRef;
+    public RequestManager glide;
 
     public JobIntentService serviceintent;
 
@@ -72,8 +106,39 @@ public class Your_Profile extends AppCompatActivity
         setContentView(R.layout.activity_your__profile);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         ctx = this;
+        destination = "UserProfilePicture";
+        id = FirebaseAuth.getInstance().getUid();
+        picturePost = findViewById(R.id.imageView2);
+        SharedPreferences prefs = getSharedPreferences(MY_PREFS, MODE_PRIVATE);
+        Log.d("TAG", "restoredTxt is not null");
+        name = prefs.getString("name", "No name defined");
+        Log.d("TAG", "from shared prefs = "+name);
+
+
+
+        try{
+            StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(destination).child(name+".jpg");
+            if (storageReference != null) {
+                Log.d("TAG", "picturePost = " + picturePost);
+                try {
+                    GlideApp.with(this).load(storageReference).placeholder(R.drawable.profile_pic).diskCacheStrategy(DiskCacheStrategy.NONE)
+                            .skipMemoryCache(true).into(picturePost);
+                    //glide.load(storageReference).into(picturePost);
+                    Log.d("TAG", "Picture Exists");
+                }
+                catch (Exception e) {
+                }
+            } else {
+                Log.d("TAG", "No Picture exists for this");
+            }
+        }
+        catch (Exception e){
+            Log.d("TAG", "No Picture for ");
+        }
+
+
+
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
@@ -156,8 +221,11 @@ public class Your_Profile extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_signout) {
+            FirebaseAuth.getInstance().signOut();
+            finish();
+            Intent intent = new Intent(Your_Profile.this, MainActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -184,11 +252,56 @@ public class Your_Profile extends AppCompatActivity
         }else if(id == R.id.nav_profile){
             Intent intent = new Intent(Your_Profile.this, Your_Profile.class);
             startActivity(intent);
-
+        }else if (id == R.id.nav_home){
+            Intent intent = new Intent(Your_Profile.this, Client_Home.class);
+            startActivity(intent);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void OpenGallery(View view) {
+        Intent galleryImage = new Intent();
+        galleryImage.setAction(Intent.ACTION_GET_CONTENT);
+        galleryImage.setType("image/*");
+        startActivityForResult(galleryImage, galleryPick);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+
+        if (requestCode == galleryPick && resultCode == RESULT_OK && data != null) {
+            ImageUri = data.getData();
+            picturePost.setImageURI(ImageUri);
+            picturePost = findViewById(R.id.imageView2);
+            picturePost.setDrawingCacheEnabled(true);
+            picturePost.buildDrawingCache();
+            Bitmap bitmap = ((BitmapDrawable) picturePost.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte [] data2 = baos.toByteArray();
+            mStoreRef = FirebaseStorage.getInstance();
+            StorageReference filePath = mStoreRef.getReference();
+            StorageReference imageRef = filePath.child(destination);
+            String fileName = name + ".jpg";
+            StorageReference spaceRef = imageRef.child(fileName);
+            UploadTask uploadTask = spaceRef.putBytes(data2);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.d("TAG","Photo failure");
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    Log.d("TAG", "Photo Sucess");
+                }
+            });
+        }
     }
 }

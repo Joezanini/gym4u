@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class Urgym extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -59,8 +61,11 @@ public class Urgym extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_signout) {
+            FirebaseAuth.getInstance().signOut();
+            finish();
+            Intent intent = new Intent(Urgym.this, MainActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -87,7 +92,10 @@ public class Urgym extends AppCompatActivity
         }else if(id == R.id.nav_profile){
             Intent intent = new Intent(Urgym.this, Your_Profile.class);
             startActivity(intent);
-        }
+        }else if (id == R.id.nav_home){
+            Intent intent = new Intent(Urgym.this, Client_Home.class);
+            startActivity(intent);}
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
