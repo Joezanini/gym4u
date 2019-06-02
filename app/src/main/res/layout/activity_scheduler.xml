@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".scheduler">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:text="Enter Class Details"
+        android:textSize="15dp"
+        android:layout_gravity="center"/>
+
+    <EditText
+        android:id="@+id/classNameSchd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Class Name: "
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
+    <EditText
+        android:id="@+id/startTimeschd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Start Time: "
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
+    <EditText
+        android:id="@+id/endTimeschd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="End Time: "
+        android:layout_marginTop="25dp"
+        android:layout_marginBottom="25dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"/>
+
+    <Button
+        android:id="@+id/schedBtn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="schedule"/>
+
+</android.support.v7.widget.LinearLayoutCompat>
