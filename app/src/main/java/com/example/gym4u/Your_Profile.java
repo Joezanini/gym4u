@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -20,49 +21,40 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.CalendarView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.jjoe64.graphview.DefaultLabelFormatter;
+import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.ValueDependentColor;
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
+import com.jjoe64.graphview.series.BarGraphSeries;
+import com.jjoe64.graphview.series.DataPoint;
+import com.jjoe64.graphview.series.LineGraphSeries;
+
+import java.lang.reflect.Array;
+import java.util.Calendar;
+import java.util.Date;
+
+import static android.media.CamcorderProfile.get;
 
 //import com.jjoe64.graphview.GraphView;
 
 public class Your_Profile extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    LocationManager locationManager;
-    LocationListener locationListener;
+    Calendar now;
+    FirebaseDatabase database;
+    DatabaseReference ref;
+    public static BarGraphSeries<DataPoint> series;
 
-    public JobIntentService serviceintent;
-
-    LocationService locationService;
-    Context ctx;
-    public Context getCtx(){
-        return ctx;
-    }
-
-    //variable for service code
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if(grantResults.length >0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
-
-            if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,10,locationListener);
-            }
-        }
-    }
-
-
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i ("myapp", true+"");
-                return true;
-            }
-        }
-        Log.i ("myapp", false+"");
-        return false;
-    }
 
 
 
@@ -72,9 +64,6 @@ public class Your_Profile extends AppCompatActivity
         setContentView(R.layout.activity_your__profile);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        ctx = this;
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -84,43 +73,120 @@ public class Your_Profile extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-/*
-        locationService = new LocationService(getCtx());
-        serviceintent = new JobIntentService(getCtx(), locationService.getClass()) {
+        // start of a whole bunch of graph stuff
+
+        final GraphView graph = (GraphView) findViewById(R.id.graph);
+        GridLabelRenderer gridLabel = graph.getGridLabelRenderer();
+        gridLabel.setHorizontalAxisTitle("Days of the Week");
+        gridLabel.setVerticalAxisTitle("Minutes spent @ gym");
+        graph.getGridLabelRenderer().setNumHorizontalLabels(7);
+
+        graph.getViewport().setYAxisBoundsManual(true);
+        graph.getViewport().setMinY(0);
+        graph.getViewport().setMaxY(130);
+        series = new BarGraphSeries<>();
+
+
+        now = Calendar.getInstance();
+        //calendar stuff
+        CalendarView calendar = (CalendarView) findViewById(R.id.calendarView);
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
-            protected void onHandleWork(@NonNull Intent intent) {
-                if (!isMyServiceRunning(locationService.getClass())) {
-                    //startService(serviceintent);
-                }
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                now.set(Calendar.YEAR, year);
+                now.set(Calendar.MONTH, month);
+                now.set(Calendar.DATE, dayOfMonth);
+                now.get(Calendar.WEEK_OF_YEAR);
+
+
+                DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).
+                        child("GymTimeInfo").child(String.valueOf((now.get(Calendar.WEEK_OF_YEAR))));
+                reference.addValueEventListener(new ValueEventListener() {
+
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+
+
+                            graph.removeAllSeries();
+                            int a, b, c, d, e, f, g;
+                            a = dataSnapshot.getValue(gymTime.class).getMon();
+                            b = dataSnapshot.getValue(gymTime.class).getTue();
+                            c = dataSnapshot.getValue(gymTime.class).getWed();
+                            d = dataSnapshot.getValue(gymTime.class).getThu();
+                            e = dataSnapshot.getValue(gymTime.class).getFri();
+                            f = dataSnapshot.getValue(gymTime.class).getSat();
+                            g = dataSnapshot.getValue(gymTime.class).getSun();
+
+
+                            DataPoint[] values = new DataPoint[7];
+                            DataPoint m = new DataPoint(0, a);
+                            DataPoint t = new DataPoint(1, b);
+                            DataPoint w = new DataPoint(2, c);
+                            DataPoint th = new DataPoint(3, d);
+                            DataPoint fr = new DataPoint(4, e);
+                            DataPoint sat = new DataPoint(5, f);
+                            DataPoint sun = new DataPoint(6, g);
+                            values[0] = m;
+                            values[1] = t;
+                            values[2] = w;
+                            values[3] = th;
+                            values[4] = fr;
+                            values[5] = sat;
+                            values[6] = sun;
+
+                            series.resetData(values);
+
+                            graph.addSeries(series);
+
+                            series.setValueDependentColor(new ValueDependentColor<DataPoint>() {
+                                @Override
+                                public int get(DataPoint data) {
+                                    return Color.rgb((int) data.getX() * 255 / 4, (int) Math.abs(data.getY() * 255 / 6), 100);
+                                }
+
+
+                            });
+                            series.setSpacing(50);
+                            series.setDrawValuesOnTop(true);
+                            series.setValuesOnTopColor(Color.RED);
+                            //series.resetData(values);
+
+                        }else{
+
+                            series.resetData(emptyValues(graph));
+
+
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+
             }
-        };
-
-
-
-
-
-
-        //GRAPH STUFF
-
-        GraphView graph = (GraphView) findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<DataPoint>(new DataPoint[]{
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6),
-                new DataPoint(5, 8),
-                new DataPoint(6, 7)
-
         });
-        graph.addSeries(series);
-
-        //END GRAPH STUFF */
 
 
+    }
 
-    };
 
-/*
+
+    public DataPoint[] emptyValues(GraphView graphView) {
+        DataPoint[] values = new DataPoint[7];
+        for (int i = 0; i < 7; i++) {
+            DataPoint m = new DataPoint(i, 0);
+            values[i]=m;
+
+        }
+        return values;
+
+    }
+
+    /*
     @Override
     protected void onDestroy() {
         stopService(serviceintent);

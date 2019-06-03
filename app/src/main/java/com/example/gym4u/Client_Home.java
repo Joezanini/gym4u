@@ -1,6 +1,8 @@
 package com.example.gym4u;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -34,6 +36,9 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.google.android.gms.common.api.Api;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -50,6 +55,12 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionDeniedResponse;
+import com.karumi.dexter.listener.PermissionGrantedResponse;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.single.PermissionListener;
 
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
@@ -58,9 +69,8 @@ import java.util.Date;
 
 public class Client_Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private static final String TAG = "yo";
-    //TextView name;
-    //String s;
+
+
     FirebaseAuth mAuth;
     private static final int PICK_VIDEO = 1;
     private Uri videoUri;
@@ -68,11 +78,15 @@ public class Client_Home extends AppCompatActivity
     String type, gym;
     VideoView videoView;
 
+//GPS stuff
+    FusedLocationProviderClient fusedLocationProviderClient;
+    LocationRequest locationRequest;
+    static Client_Home instance;
+    public static Client_Home getInstance() {
+        return instance;
+    }
+//end GPS
 
-
-
-    LocationManager locationManager;
-    LocationListener locationListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,73 +96,36 @@ public class Client_Home extends AppCompatActivity
         setSupportActionBar(toolbar);
 
 
-        locationManager =(LocationManager)this.getSystemService(Context.LOCATION_SERVICE);
-
-
-
-        locationListener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                String longit = Location.convert(location.getLongitude(), location.FORMAT_DEGREES);
-                String lat = Location.convert(location.getLatitude(), location.FORMAT_DEGREES);
-                Double gymLat = 37.711780;
-                Double gymLong = -121.000594;
-                Integer hourStart, minStart;
-
-                Location gym = new Location(location);
-                gym.setLatitude(gymLat);
-                gym.setLongitude(gymLong);
-
-                Location current = new Location(location);
-                minStart = getMin();
-                hourStart = getHour();
-                while(current.distanceTo(gym) < 100 ) {
-                    Log.i("FOUND LOCATION", "AT THE GYM");
-
-                  //  Log.i("start timer", "gym start time is " + hourStart + ":" + minStart);
-                    if (current.distanceTo(gym) > 50) {
-                        Integer minEnd = getMin();
-                        Integer hourEnd = getHour();
-                        Integer hours = hourEnd - hourStart;
-                        Integer mins = minStart - minEnd;
-                        Log.i("Gym TIME", "at the gym for " + hours+ "." +mins);
-                        //Log.i("Location", "long: " + longit + "lat: " + lat);
-                        return;
-
+        //GPS stuff
+        instance = this;
+        Dexter.withActivity(this).withPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                .withListener(new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted(PermissionGrantedResponse response) {
+                        updateLocation();
                     }
 
-                }
+                    @Override
+                    public void onPermissionDenied(PermissionDeniedResponse response) {
+                        Toast.makeText(Client_Home.this, "you must accept this location", Toast.LENGTH_LONG).show();
+                    }
 
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(PermissionRequest permission, PermissionToken token) {
 
-            }
+                    }
+                }).check();
+        //end GPS stuff
 
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                    startActivity(intent);
-            }
-        };
-        //go outside of location listener to ask for permission
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)!= PackageManager.PERMISSION_GRANTED){
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION},1);
-        }else{
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,0,0,locationListener);
-        }
 
         final Button videoChangeButton = findViewById(R.id.post_button_for_video);
+
         String id1 = FirebaseAuth.getInstance().getUid();
+
         final FirebaseDatabase database1 = FirebaseDatabase.getInstance();
+
         DatabaseReference refT = database1.getReference("Users/" + id1 + "/type");
+
         refT.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -190,17 +167,15 @@ public class Client_Home extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-
         // Get a reference to our posts
         String id = FirebaseAuth.getInstance().getUid();
         mAuth = FirebaseAuth.getInstance();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference ref = database.getReference("Users/"+id+"/name");
-        DatabaseReference refG = database.getReference("Users/"+id+"/gym");
+        DatabaseReference ref = database.getReference("Users/" + id + "/name");
+        DatabaseReference refG = database.getReference("Users/" + id + "/gym");
         FirebaseUser cUser = mAuth.getCurrentUser();
 
         storageRef = FirebaseStorage.getInstance().getReference();
-
 
 
         refG.addValueEventListener(new ValueEventListener() {
@@ -248,7 +223,7 @@ public class Client_Home extends AppCompatActivity
                 Log.d("Error:", post);
                 //TextView name = findViewById(R.id.navHeadName);
                 //name.setText(post);
-               // s = name.getText().toString();
+                // s = name.getText().toString();
             }
 
             @Override
@@ -258,8 +233,34 @@ public class Client_Home extends AppCompatActivity
         });
 
 
+    }
+
+    //update GPS location
+    private void updateLocation() {
+        buildLocationRequest();
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        fusedLocationProviderClient.requestLocationUpdates(locationRequest, getPendingIntent());
+    }
+
+    //used to call broadcast receiver with updated location
+    private PendingIntent getPendingIntent() {
+        Intent intent = new Intent(this,LocationService.class);
+        intent.setAction(LocationService.ACTION_PROCESS_UPDATE);
+        return PendingIntent.getBroadcast(this,0,intent,PendingIntent.FLAG_UPDATE_CURRENT);
 
 
+    }
+
+    //set details for location request
+    private void buildLocationRequest() {
+        locationRequest = new LocationRequest();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(5000);
+        locationRequest.setFastestInterval(3000);
+        locationRequest.setSmallestDisplacement(10f);
     }
 
     public void OpenGallery(View view) {
@@ -326,7 +327,7 @@ public class Client_Home extends AppCompatActivity
     }
 
 
-
+/*
     public static Integer getMin() {
         Date time = new Date();
         //lower case h = 12 hr time, a = use AM/PM
@@ -343,7 +344,7 @@ public class Client_Home extends AppCompatActivity
         Integer hour = Integer.parseInt(timeFormat.format(time));
         return hour;
     }
-
+*/
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

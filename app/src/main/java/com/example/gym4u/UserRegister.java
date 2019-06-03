@@ -34,7 +34,7 @@ public class UserRegister extends AppCompatActivity {
     private ProgressBar progressBar;
     private FirebaseAuth auth;
 
-
+/*
     LocationManager locationManager;
     LocationListener locationListener;
 
@@ -49,7 +49,7 @@ public class UserRegister extends AppCompatActivity {
             }
         }
     }
-
+*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

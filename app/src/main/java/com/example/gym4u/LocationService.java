@@ -1,10 +1,13 @@
 package com.example.gym4u;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Service;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -12,110 +15,157 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.CalendarView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class LocationService extends Service {
+class LocationService extends BroadcastReceiver {
 
-    LocationListener listener;
-    LocationManager locationManager;
-    public int counter=0;
-    public LocationService(Context applicationContext) {
-        super();
-        Log.i("myapp", "here I am!");
-    }
-
-    public LocationService(){
-
+    public static final String ACTION_PROCESS_UPDATE = "com.example.gym4u.UPDATE_LOCATION";
+    public static boolean atGym = false;
+    public static int startTime,endTime;
+    private DatabaseReference dbRef_toDate, dbRef_toDur;
+    enum Days{
+        Mon,Tue,Wed,Thu,Fri,Sat,Sun;
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        super.onStartCommand(intent, flags, startId);
-        startTimer();
-        Log.i("myapp", "pre location listener");
+    public void onReceive(Context context, Intent intent) {
+        if(intent != null){
 
-        listener = new LocationListener() {
-            @Override
-            public void onLocationChanged(Location location) {
-                Intent i = new Intent("location_update");
-                i.putExtra("coordinates",location.getLongitude()+" "+location.getLatitude());
-                sendBroadcast(i);
+            final String action = intent.getAction();
+            if(ACTION_PROCESS_UPDATE.equals(action)){
+                LocationResult result = LocationResult.extractResult(intent);
+                if(result != null){
+                    Location location = result.getLastLocation();
+                    String location_string = new StringBuilder(""+ location.getLatitude())
+                            .append("/").append(location.getLongitude()).toString();
+                    Log.i("gpsStuff","location is "+ location_string);
 
+                    // this is Dynamic's coordinates
+                    double lat = 37.711780;
+                    double lon = -121.000549;
+                    Location gym = new Location(location);
+                    gym.setLatitude(lat);
+                    gym.setLongitude(lon);
+
+                    if(atGym == false && location.distanceTo(gym) < 50 ){
+                        atTheGym(location,gym);
+                    }
+                    if(atGym == true && location.distanceTo(gym)>50){
+                        endAtGym();
+                    }
+
+                }
             }
-
-            @Override
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String provider) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String provider) {
-                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(i);
-            }
-        };
-
-
-        return START_STICKY;
-    }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        Log.i("myapp", "ondestroy!");
-        Intent broadcastIntent = new Intent(this, locationReceiver.class);
-
-        sendBroadcast(broadcastIntent);
-        stoptimertask();
-    }
-
-    private Timer timer;
-    private TimerTask timerTask;
-    long oldTime=0;
-    public void startTimer() {
-        //set a new Timer
-        timer = new Timer();
-
-        //initialize the TimerTask's job
-        initializeTimerTask();
-
-        //schedule the timer, to wake up every 1 second
-        timer.schedule(timerTask, 1000, 1000); //
-    }
-
-    /**
-     * it sets the timer to print the counter every x seconds
-     */
-    public void initializeTimerTask() {
-        timerTask = new TimerTask() {
-            public void run() {
-                Log.i("in timer", "in timer ++++  "+ (counter++));
-            }
-        };
-    }
-
-    /**
-     * not needed
-     */
-    public void stoptimertask() {
-        //stop the timer, if it's not already null
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
         }
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
+
+    public gymTime setUp(String date,int dur){
+        gymTime timeGym = new gymTime();
+
+        if (date == "Mon"){
+                timeGym.setMon(dur);
+        }else if (date == "Tue"){
+            timeGym.setTue(dur);
+        }else if (date == "Wed"){
+            timeGym.setWed(dur);
+        }else if (date == "Thu"){
+            timeGym.setThu(dur);
+        }else if (date == "Fri"){
+            timeGym.setFri(dur);
+        }else if (date == "Sat"){
+            timeGym.setSat(dur);
+        }else {
+            timeGym.setSun(dur);
+        }
+        return  timeGym;
     }
+
+
+    public void insert(int duration){
+        //insert week #
+        Log.i("gpsStuff","inserting into Firebase");
+
+      gymTime NEW = setUp(getDate(),duration);
+
+        FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).
+                child("GymTimeInfo").child(getWeek()).setValue(NEW);
+    }
+
+
+public String getWeek(){
+    Log.i("gpsStuff","getting week");
+
+    Date date = new Date();
+    //lower case h = 12 hr time, a = use AM/PM
+    String strDateFormat = "w";
+    DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+    String formattedDate = dateFormat.format(date);
+    return formattedDate;
+}
+    public static String getDate() {
+        Date date = new Date();
+        Log.i("gpsStuff","getting day of week");
+
+        //lower case h = 12 hr time, a = use AM/PM
+        String strDateFormat = "E";
+        DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+        String formattedDate = dateFormat.format(date);
+        return formattedDate;
+    }
+
+    public void atTheGym(Location location, Location gym){
+        Log.i("gpsStuff","in locator..");
+        if(atGym == false && location.distanceTo(gym) < 50 ) {
+            atGym = true;
+                Log.i("gpsStuff", "AT THE GYM");
+                atGym = true;
+                startTime = (int) (System.currentTimeMillis()/1000);
+        }
+        /*else if(atGym == false && location.distanceTo(gym)>50 ) {
+            endTime = (int) (System.currentTimeMillis()/1060);
+            Log.i("gpsStuff","start time is: "+startTime);
+            int diff = endTime - startTime;
+            insert(diff);
+            Log.i("gpsStuff","Left the gym ");
+
+            Log.i("gpsStuff","gym Time: "+  diff);
+            atGym = true;
+        }*/
+    }
+
+    public void endAtGym(){
+        endTime = (int) (System.currentTimeMillis()/1000);
+        Log.i("gpsStuff","start time is: "+startTime);
+        int diff = (endTime - startTime)/60;
+        atGym = false;
+        insert(diff);
+        Log.i("gpsStuff","Left the gym ");
+
+        Log.i("gpsStuff","gym Time: "+  diff);
+
+    }
+
+
+
 }

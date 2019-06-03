@@ -70,16 +70,6 @@
                         app:layout_constraintTop_toBottomOf="@+id/textView"
                         app:srcCompat="@drawable/ic_menu_camera" />
 
-                    <ProgressBar
-                        android:id="@+id/progressBar2"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="60dp"
-                        android:layout_marginTop="22dp"
-                        android:layout_marginBottom="16dp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/imageButton"
-                        tools:layout_editor_absoluteX="3dp" />
                 </android.support.constraint.ConstraintLayout>
 
             </LinearLayout>
@@ -89,14 +79,56 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="60"
-            android:orientation="horizontal">
+            android:layout_weight="40"
+            android:orientation="vertical"
+            tools:ignore="ExtraText">
 
-            <com.jjoe64.graphview.GraphView
-                android:id="@+id/graph"
-                android:layout_width="411dp"
-                android:layout_height="200dip" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="40" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="456dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginLeft="5dp"
+
+                android:layout_weight="60">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"><![CDATA[
+
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+
+                    ]]>
+                    <com.jjoe64.graphview.GraphView
+                        android:id="@+id/graph"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="205dp"
+                        android:layout_weight="10" />
+
+                    <CalendarView
+                        android:id="@+id/calendarView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="20"
+                        android:foregroundGravity="center" />
+
+
+
+                </LinearLayout>
+            </ScrollView>
+
         </LinearLayout>
+
 
     </LinearLayout>
 
