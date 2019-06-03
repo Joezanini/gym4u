@@ -102,5 +102,26 @@ Saturday, 9 a.m.–1 p.m.</string>
     <string name="menu_share">Share</string>
     <string name="menu_send">Send</string>
 
+    //joe is working here
+    <string-array name="week">
+        <item> Monday </item>
+        <item> Tuesday </item>
+        <item> Wednesday </item>
+        <item> Thursday </item>
+        <item> Friday </item>
+        <item> Saturday </item>
+        <item> Sunday </item>
+    </string-array>
+
+    <string-array name="dia">
+        <item> M </item>
+        <item> T </item>
+        <item> W </item>
+        <item> T </item>
+        <item> F </item>
+        <item> S </item>
+        <item> S </item>
+    </string-array>
+
 
 </resources>

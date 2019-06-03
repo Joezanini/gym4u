@@ -34,7 +34,6 @@
     <VideoView
         android:id="@+id/VideoView"
         android:layout_width="match_parent"
-
         android:layout_height="300dp" />
 
     <Button
@@ -42,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="OpenGallery"
+        android:visibility="gone"
         android:text="Update Video" />
 
 

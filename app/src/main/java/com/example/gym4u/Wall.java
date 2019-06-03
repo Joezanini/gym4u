@@ -65,9 +65,8 @@ public class Wall extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
-    //MyDB db;
     public Button NewPostButton;
-    public ImageView picturePost;
+    public ImageView picturePost, profilePic;
     public EditText newPost;
     private static final int galleryPick = 1;
     private Uri ImageUri;
@@ -79,13 +78,14 @@ public class Wall extends AppCompatActivity
     private FirebaseStorage mStoreRef;
     private RecyclerView mRecycleView;
     public  String saveDate, saveTime, saveName;
+    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wall);
-        // showPosts();
 
+        // This is for navigation stuff
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -97,13 +97,18 @@ public class Wall extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        //End of navigation stuff
 
+        // finding views and assigning them
+        //setting the picturePost to invisible
         NewPostButton = (Button) findViewById(R.id.post_button);
         picturePost = (ImageView) findViewById(R.id.postImage1);
+        profilePic = findViewById(R.id.ProfilePicture);
         picturePost.setVisibility(View.INVISIBLE);
         newPost = findViewById(R.id.postEditText);
 
-        String id = FirebaseAuth.getInstance().getUid();
+        //working with database to get users name and gym (not actually using gym it is hard coded)
+        id = FirebaseAuth.getInstance().getUid();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Users/" + id + "/name");
         DatabaseReference refG = database.getReference("Users/" + id + "/gym");
@@ -133,13 +138,14 @@ public class Wall extends AppCompatActivity
             }
         });
 
+        //Going to database and getting all the posts stuff for the wall
         mDataRef = FirebaseDatabase.getInstance().getReference("Gyms").child("Dynamic").child("posts");
         mDataRef.addValueEventListener(new ValueEventListener() {
                                            @Override
                                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                mRecycleView = (RecyclerView) findViewById(R.id.recycle_view);
                                                List<Postdata> list = new ArrayList<>();
-                                               Adapter adapter = new Adapter(list, GlideApp.with(Wall.this), destination);
+                                               Adapter adapter = new Adapter(list, GlideApp.with(getApplicationContext()), destination);
                                                mRecycleView.setLayoutManager(new LinearLayoutManager(Wall.this));
                                                mRecycleView.setAdapter(adapter);
                                                List<Postdata> sampleList = new ArrayList<>();
@@ -205,8 +211,11 @@ public class Wall extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_signout) {
+            FirebaseAuth.getInstance().signOut();
+            finish();
+            Intent intent = new Intent(Wall.this, MainActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -229,6 +238,12 @@ public class Wall extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_heart) {
             Intent intent = new Intent(Wall.this, Urheart.class);
+            startActivity(intent);
+        }else if (id == R.id.nav_profile){
+            Intent intent = new Intent(Wall.this, Your_Profile.class);
+            startActivity(intent);
+        }else if (id == R.id.nav_home) {
+            Intent intent = new Intent(Wall.this, Client_Home.class);
             startActivity(intent);
         }
 

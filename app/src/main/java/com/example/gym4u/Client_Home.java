@@ -5,6 +5,7 @@ import android.app.ActivityManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -71,6 +72,10 @@ public class Client_Home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
 
+    private static final String TAG = "yo";
+    //TextView name;
+    //String s;
+    public static final String MY_PREFS = "MyPrefs";
     FirebaseAuth mAuth;
     private static final int PICK_VIDEO = 1;
     private Uri videoUri;
@@ -88,12 +93,18 @@ public class Client_Home extends AppCompatActivity
 //end GPS
 
 
+    LocationManager locationManager;
+    LocationListener locationListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_client__home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        final SharedPreferences.Editor editor= getSharedPreferences(MY_PREFS, MODE_PRIVATE).edit();
+
 
 
         //GPS stuff
@@ -119,19 +130,16 @@ public class Client_Home extends AppCompatActivity
 
 
         final Button videoChangeButton = findViewById(R.id.post_button_for_video);
-
         String id1 = FirebaseAuth.getInstance().getUid();
-
         final FirebaseDatabase database1 = FirebaseDatabase.getInstance();
-
         DatabaseReference refT = database1.getReference("Users/" + id1 + "/type");
 
         refT.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 type = (String) dataSnapshot.getValue();
-                if (type.matches("Client")) {
-                    videoChangeButton.setVisibility(View.GONE);
+                if (type.matches("Instructor")) {
+                    videoChangeButton.setVisibility(View.VISIBLE);
                 }
             }
 
@@ -167,6 +175,7 @@ public class Client_Home extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
+
         // Get a reference to our posts
         String id = FirebaseAuth.getInstance().getUid();
         mAuth = FirebaseAuth.getInstance();
@@ -176,6 +185,7 @@ public class Client_Home extends AppCompatActivity
         FirebaseUser cUser = mAuth.getCurrentUser();
 
         storageRef = FirebaseStorage.getInstance().getReference();
+
 
 
         refG.addValueEventListener(new ValueEventListener() {
@@ -221,9 +231,12 @@ public class Client_Home extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String post = (String) dataSnapshot.getValue();
                 Log.d("Error:", post);
+                editor.putString("name", post);
+                Log.d("TAG", "Client home editor" + post);
+                editor.commit();
                 //TextView name = findViewById(R.id.navHeadName);
                 //name.setText(post);
-                // s = name.getText().toString();
+               // s = name.getText().toString();
             }
 
             @Override
@@ -327,7 +340,7 @@ public class Client_Home extends AppCompatActivity
     }
 
 
-/*
+
     public static Integer getMin() {
         Date time = new Date();
         //lower case h = 12 hr time, a = use AM/PM
@@ -344,7 +357,7 @@ public class Client_Home extends AppCompatActivity
         Integer hour = Integer.parseInt(timeFormat.format(time));
         return hour;
     }
-*/
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -370,8 +383,12 @@ public class Client_Home extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_signout) {
+            FirebaseAuth.getInstance().signOut();
+            finish();
+            Intent intent = new Intent(Client_Home.this, MainActivity.class);
+            startActivity(intent);
+            //return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -397,10 +414,11 @@ public class Client_Home extends AppCompatActivity
         }else if(id == R.id.nav_profile){
             Intent intent = new Intent(Client_Home.this, Your_Profile.class);
             startActivity(intent);
-        }else{
-            Toast.makeText(this, "Item is null", Toast.LENGTH_LONG).show();
-
+        }else if(id == R.id.nav_home){
+            Intent intent = new Intent(Client_Home.this, Client_Home.class);
+            startActivity(intent);
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

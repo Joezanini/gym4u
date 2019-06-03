@@ -64,6 +64,7 @@ public class Announcement extends AppCompatActivity
     String destination = "AnnouncementImages";
     public Fragment announcement_fragment;
     private FragmentManager fragmentManager = this.getSupportFragmentManager();
+    String id;
 
 
     @Override
@@ -87,7 +88,7 @@ public class Announcement extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        String id = FirebaseAuth.getInstance().getUid();
+        id = FirebaseAuth.getInstance().getUid();
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("Users/" + id + "/name");
         DatabaseReference refG = database.getReference("Users/" + id + "/gym");
@@ -98,6 +99,8 @@ public class Announcement extends AppCompatActivity
                 type = (String) dataSnapshot.getValue();
                 if (type.matches("Client")) {
                     postFrag.setVisibility(View.GONE);
+                    //View view =findViewById(R.id.viewPic);
+                    //view.setVisibility(View.VISIBLE);
                 }else{
                     View view = findViewById(R.id.viewPic);
                     view.setVisibility(View.GONE);
@@ -210,8 +213,11 @@ public class Announcement extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_signout) {
+            FirebaseAuth.getInstance().signOut();
+            finish();
+            Intent intent = new Intent(Announcement.this, MainActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -235,6 +241,12 @@ public class Announcement extends AppCompatActivity
             startActivity(intent);
         } else if (id == R.id.nav_heart) {
             Intent intent = new Intent(Announcement.this, Urheart.class);
+            startActivity(intent);
+        } else if (id == R.id.nav_home){
+            Intent intent = new Intent(Announcement.this, Client_Home.class);
+            startActivity(intent);
+        }else if(id == R.id.nav_profile){
+            Intent intent = new Intent(Announcement.this, Your_Profile.class);
             startActivity(intent);
         }
 
