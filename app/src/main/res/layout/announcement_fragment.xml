@@ -74,6 +74,12 @@
             />
 
     </LinearLayout>
+    <View
+        android:layout_margin="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="#141414"
+        />
 
 
 
