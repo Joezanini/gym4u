@@ -126,7 +126,7 @@ public class Your_Profile extends AppCompatActivity
             if (storageReference != null) {
                 Log.d("TAG", "picturePost = " + picturePost);
                 try {
-                    GlideApp.with(this).load(storageReference).placeholder(R.drawable.profile_pic).diskCacheStrategy(DiskCacheStrategy.NONE)
+                    GlideApp.with(this).load(storageReference).placeholder(R.drawable.blank_profile).diskCacheStrategy(DiskCacheStrategy.NONE)
                             .skipMemoryCache(true).into(picturePost);
                     //glide.load(storageReference).into(picturePost);
                     Log.d("TAG", "Picture Exists");

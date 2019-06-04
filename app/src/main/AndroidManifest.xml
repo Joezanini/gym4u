@@ -28,7 +28,7 @@
 
         <activity
             android:name=".Your_Profile"
-            android:label="@string/title_activity_your_profile"
+            android:label=""
             android:parentActivityName=".Client_Home"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -41,7 +41,7 @@
         <activity android:name=".UserLogin" />
         <activity
             android:name=".Urheart"
-            android:label="@string/title_activity_urheart"
+            android:label=""
             android:parentActivityName=".Client_Home"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -50,7 +50,7 @@
         </activity>
         <activity
             android:name=".Urgym"
-            android:label="@string/title_activity_urgym"
+            android:label=""
             android:parentActivityName=".Client_Home"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -59,7 +59,7 @@
         </activity>
         <activity
             android:name=".Announcement"
-            android:label="@string/title_activity_announcement"
+            android:label=""
             android:parentActivityName=".Client_Home"
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
@@ -68,7 +68,7 @@
         </activity>
         <activity
             android:name=".Wall"
-            android:label="@string/title_activity_wall"
+            android:label=""
             android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -76,7 +76,7 @@
         </activity>
         <activity
             android:name=".Client_Home"
-            android:label="@string/title_activity_client__home"
+            android:label=""
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MainActivity">
             <intent-filter>

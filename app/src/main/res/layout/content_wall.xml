@@ -27,19 +27,60 @@
         android:textColorHighlight="#FF8F00"
         android:textColorLink="#FF8F00"
         android:textCursorDrawable="@color/colorPrimary" />
-    <ImageButton
+    <View
+        android:layout_margin="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="#141414"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:orientation="horizontal">
+        <View
+            android:layout_margin="3dp"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="#141414"
+            />
+
+        <Button
+            android:id="@+id/post_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:onClick="UpdatePost"
+            android:layout_weight="2"
+            android:background="@color/cardview_light_background"
+            android:text="Create NewPost" />
+        <View
+            android:layout_margin="3dp"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="#141414"
+            />
+
+        <ImageButton
         android:id="@+id/addImage"
         android:onClick="OpenGallery"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_weight="1"
+        android:layout_height="match_parent"
+        android:background="@color/cardview_light_background"
         app:srcCompat="@drawable/ic_menu_camera" />
-    <Button
-        android:id="@+id/post_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="UpdatePost"
-        android:text="Create NewPost" />
+        <View
+            android:layout_margin="3dp"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="#141414"
+            />
 
+    </LinearLayout>
+    <View
+        android:layout_margin="3dp"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:background="#141414"
+        />
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"

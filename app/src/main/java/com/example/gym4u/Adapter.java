@@ -67,7 +67,7 @@ public class Adapter extends
             String username = obj.getName();
             StorageReference storageReference = FirebaseStorage.getInstance().getReference().child(dest2).child( username +".jpg");
             if(storageReference != null){
-                glide.load(storageReference).placeholder(R.drawable.profile_pic).diskCacheStrategy(DiskCacheStrategy.NONE)
+                glide.load(storageReference).placeholder(R.drawable.blank_profile).diskCacheStrategy(DiskCacheStrategy.NONE)
                         .skipMemoryCache(true).into(viewHolder.profPic);
                 Log.d("TAG", "Picture Exists");}
             else{
