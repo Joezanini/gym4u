@@ -45,6 +45,10 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.lang.reflect.Array;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -158,13 +162,16 @@ public class Your_Profile extends AppCompatActivity
         final GraphView graph = (GraphView) findViewById(R.id.graph);
         GridLabelRenderer gridLabel = graph.getGridLabelRenderer();
         gridLabel.setHorizontalAxisTitle("Days of the Week");
-        gridLabel.setVerticalAxisTitle("Minutes spent @ gym");
+     //   gridLabel.setVerticalAxisTitle("Minutes spent @ gym");
         graph.getGridLabelRenderer().setNumHorizontalLabels(7);
 
         graph.getViewport().setYAxisBoundsManual(true);
         graph.getViewport().setMinY(0);
         graph.getViewport().setMaxY(130);
         series = new BarGraphSeries<>();
+        StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
+        staticLabelsFormatter.setHorizontalLabels(new String[]{"Mon","Tue","Wed","Thu", "Fri","Sat","Sun"});
+        graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
 
         now = Calendar.getInstance();
@@ -197,8 +204,9 @@ public class Your_Profile extends AppCompatActivity
                             e = dataSnapshot.getValue(gymTime.class).getFri();
                             f = dataSnapshot.getValue(gymTime.class).getSat();
                             g = dataSnapshot.getValue(gymTime.class).getSun();
-
-
+                            StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graph);
+                            staticLabelsFormatter.setHorizontalLabels(new String[]{"Mon","Tue","Wed","Thu", "Fri","Sat","Sun"});
+                            graph.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
                             DataPoint[] values = new DataPoint[7];
                             DataPoint m = new DataPoint(0, a);
                             DataPoint t = new DataPoint(1, b);

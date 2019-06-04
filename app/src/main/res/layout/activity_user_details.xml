@@ -106,9 +106,10 @@
             android:id="@+id/confirmButton"
             android:layout_width="411dp"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark"
+            android:onClick="ButtonClick"
             android:text="Confirm Profile "
-            tools:layout_editor_absoluteY="474dp"
-            android:onClick="ButtonClick"/>
+            tools:layout_editor_absoluteY="474dp" />
     </LinearLayout>
 
 

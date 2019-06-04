@@ -18,13 +18,14 @@
 
     <EditText
         android:id="@+id/classNameSchd"
+        style="@style/AppTheme"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Class Name: "
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="25dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"/>
+        android:layout_marginTop="25dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="25dp"
+        android:hint="Class Name: " />
 
     <EditText
         android:id="@+id/startTimeschd"
@@ -50,6 +51,7 @@
         android:id="@+id/schedBtn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="schedule"/>
+        android:background="@color/colorPrimary"
+        android:text="schedule" />
 
 </android.support.v7.widget.LinearLayoutCompat>
