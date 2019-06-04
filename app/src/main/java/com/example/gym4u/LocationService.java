@@ -43,9 +43,7 @@ class LocationService extends BroadcastReceiver {
     public static boolean atGym = false;
     public static int startTime,endTime;
     private DatabaseReference dbRef_toDate, dbRef_toDur;
-    enum Days{
-        Mon,Tue,Wed,Thu,Fri,Sat,Sun;
-    }
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -82,18 +80,18 @@ class LocationService extends BroadcastReceiver {
 
     public gymTime setUp(String date,int dur){
         gymTime timeGym = new gymTime();
-
-        if (date == "Mon"){
+        Log.i("Date",date);
+        if (date.equals("Mon") ){
                 timeGym.setMon(dur);
-        }else if (date == "Tue"){
+        }else if (date.equals("Tue")){
             timeGym.setTue(dur);
-        }else if (date == "Wed"){
+        }else if (date.equals( "Wed")){
             timeGym.setWed(dur);
-        }else if (date == "Thu"){
+        }else if (date.equals("Thu")){
             timeGym.setThu(dur);
-        }else if (date == "Fri"){
+        }else if (date.equals("Fri")){
             timeGym.setFri(dur);
-        }else if (date == "Sat"){
+        }else if (date.equals("Sat")){
             timeGym.setSat(dur);
         }else {
             timeGym.setSun(dur);

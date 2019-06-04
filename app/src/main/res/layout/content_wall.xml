@@ -24,8 +24,8 @@
         android:inputType="textPersonName"
         android:text=""
         android:textColor="@android:color/black"
-        android:textColorHighlight="#FF8F00"
-        android:textColorLink="#FF8F00"
+        android:textColorHighlight="@color/cardview_light_background"
+        android:textColorLink="@color/colorPrimaryDark"
         android:textCursorDrawable="@color/colorPrimary" />
     <ImageButton
         android:id="@+id/addImage"
@@ -44,7 +44,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/recycle_view"
-        android:background="@drawable/postbackround"
         />
 
 </LinearLayout>

@@ -198,7 +198,7 @@ public class Client_Home extends AppCompatActivity
                     @Override
                     public void onSuccess(Uri uri) {
                         Log.d("Video", "The video was successful");
-                        Toast.makeText(Client_Home.this, uri.toString(), Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(Client_Home.this, uri.toString(), Toast.LENGTH_SHORT).show();
                         MediaController mc = new MediaController(Client_Home.this);
                         videoView.setMediaController(mc);
                         videoView.setVideoURI(uri);
@@ -208,11 +208,10 @@ public class Client_Home extends AppCompatActivity
                             @Override
                             public void onPrepared(MediaPlayer mediaPlayer) {
                                 mediaPlayer.setLooping(true);
-                                videoView.start();
+                                //videoView.start();
                             }
                         });
                         Log.d("Video", "Video should be started");
-                        Toast.makeText(Client_Home.this, "The video should be playing", Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -340,23 +339,6 @@ public class Client_Home extends AppCompatActivity
     }
 
 
-
-    public static Integer getMin() {
-        Date time = new Date();
-        //lower case h = 12 hr time, a = use AM/PM
-        String strTimeFormat = "mm";
-        DateFormat timeFormat = new SimpleDateFormat(strTimeFormat);
-        Integer min = Integer.parseInt(timeFormat.format(time));
-        return min;
-    }
-    public static Integer getHour(){
-        Date time = new Date();
-        //lower case h = 12 hr time, a = use AM/PM
-        String strTimeFormat = "hh";
-        DateFormat timeFormat = new SimpleDateFormat(strTimeFormat);
-        Integer hour = Integer.parseInt(timeFormat.format(time));
-        return hour;
-    }
 
     @Override
     public void onBackPressed() {

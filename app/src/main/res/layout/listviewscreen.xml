@@ -67,7 +67,7 @@
                 android:layout_margin="3dp"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#FFC107"
+                android:background="@color/colorPrimaryDark"
                 />
 
     </LinearLayout>

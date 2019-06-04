@@ -21,12 +21,13 @@
         android:id="@+id/viewPic"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:background="@drawable/announcement" />
+        android:background="@drawable/announcements"></View>
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/recycle_view_for_annoucements"
+        android:background="#ebebeb"
         />
 
 
