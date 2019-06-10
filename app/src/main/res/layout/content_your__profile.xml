@@ -108,6 +108,17 @@
 
 
                     ]]>
+
+                    <TextView
+                        android:id="@+id/it"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="10"
+                        android:text="Time (in minutes) @ Gym "
+                        android:textAlignment="center"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="18sp" />
+
                     <com.jjoe64.graphview.GraphView
                         android:id="@+id/graph"
                         android:layout_marginRight="5dp"
