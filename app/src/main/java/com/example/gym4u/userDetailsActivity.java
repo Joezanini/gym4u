@@ -51,7 +51,7 @@ String destination = "UserProfilePicture";
         String userType = CISpinner.getSelectedItem().toString();
         String gymName = GymSpinner.getSelectedItem().toString();
 
-        Bitmap bm = BitmapFactory.decodeResource(this.getResources(), R.drawable.profile_pic);
+        Bitmap bm = BitmapFactory.decodeResource(this.getResources(), R.drawable.blank_profile);
         //Bitmap bitmap = ((Bitmap) R.drawable.profile_pic).getBitmap();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bm.compress(Bitmap.CompressFormat.JPEG, 100, baos);
