@@ -1,0 +1,24 @@
+
+
+Application: GYM4U
+
+Creators: Justine Estrada, Anna Kovneva, Joe Zanini
+
+Register:
+
+When registering there is a spinner that gives options for a few gym's. However, we only implemented
+this project for Dynamic so right now that is the Gym that you can select that will have the app run
+properly.
+
+Heart Rate Activity:
+
+Our app can be ran on an emulator but the heart rate activity may crash if opened in the emulator
+since it will not be able to access the flashlight needed to run the activity. The heart rate activity
+can be ran on any android device.
+
+Your Profile activity:
+
+The gym coordinates are hardcoded to match Dynamic's coordinates if you are using the emulator to test
+this portion just push (37.711780,-121.000549) into the emulator's location and it will begin the timer.
+Then when you want to end the timer just change the coordinates. There are log statements under the tag
+"gpsStuff" that will confirm when the timer is started and stopped.
